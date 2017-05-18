@@ -2,9 +2,11 @@
   "name": "musicq",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index",
+  "types": "lib/index",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build:live",
+    "build:live": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
