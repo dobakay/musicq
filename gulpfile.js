@@ -1,6 +1,7 @@
 var gulp = require("gulp");
 var ts = require("gulp-typescript");
 var merge = require('merge2');
+var run = require('gulp-run');
 var tsProject = ts.createProject("tsconfig.json");
 
 gulp.task("default", function () {
@@ -21,6 +22,7 @@ gulp.task('scripts', function() {
 });
 gulp.task('watch', ['scripts'], function() {
     gulp.watch('src/*', ['scripts']);
+    return run('node dist/js/index.js').exec();
 });
 
 gulp.task('default', ['watch']);
