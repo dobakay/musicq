@@ -6,7 +6,7 @@
   "types": "lib/index",
   "scripts": {
     "start": "npm run build:live",
-    "build:live": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec ts-node src/index.ts"
+    "build:live": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec tsc src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -21,8 +21,12 @@
   "homepage": "https://github.com/Putzmitt3l/musicq#readme",
   "devDependencies": {
     "@types/node": "^7.0.18",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.1.7",
+    "gulp-util": "^3.0.8",
+    "merge2": "^1.0.3",
     "nodemon": "^1.11.0",
     "ts-node": "^3.0.4",
-    "typescript": "^2.3.2"
+    "typescript": "^2.3.4"
   }
 }

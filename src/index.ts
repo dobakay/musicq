@@ -1,1 +1,3 @@
-console.log('Hello world');
+import { sayHello } from "./greet";
+
+console.log(sayHello("TypeScript"));
