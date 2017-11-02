@@ -1,4 +1,5 @@
-/// <reference types="express" />
-import * as express from 'express';
-declare const _default: express.Application;
-export default _default;
+declare class Customer {
+    name: string;
+    constructor(name: string);
+    getName(): string;
+}
