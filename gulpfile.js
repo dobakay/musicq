@@ -2,12 +2,13 @@ var path = require("path");
 var gulp = require("gulp");
 var merge = require('merge2');
 var clean = require('gulp-clean');
-var run = require('gulp-run');
+// var run = require('gulp-run');
+var exec = require('child_process').exec;
 var ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 var tsProject = ts.createProject("tsconfig.json");
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['server']);
 
 gulp.task('clean-scripts', function () {
   return gulp.src('dist/*', {read: false})
@@ -36,5 +37,13 @@ gulp.task('scripts', ['clean-scripts'], function() {
 
 gulp.task('watch', ['scripts'], function() {
     gulp.watch('src/*', ['scripts']);
-    return run('node dist/js/index.js').exec();
 });
+
+gulp.task('server', ['watch'], function(cb) {
+    // return run('node dist/js/index.js').exec();
+    exec('node dist/js/index.js', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  })
+})

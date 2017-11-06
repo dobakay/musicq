@@ -5,7 +5,7 @@
   "main": "lib/index",
   "types": "lib/index",
   "scripts": {
-    "start": "npm run build:live",
+    "start": "node ./dist/js/index.js",
     "build:live": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec tsc src/index.ts"
   },
   "repository": {
@@ -20,10 +20,13 @@
   },
   "homepage": "https://github.com/Putzmitt3l/musicq#readme",
   "devDependencies": {
-    "@types/body-parser": "^1.16.3",
+    "@types/body-parser": "^1.16.7",
+    "@types/cookie-parser": "^1.4.1",
     "@types/debug": "0.0.29",
+    "@types/errorhandler": "0.0.32",
     "@types/express": "^4.0.35",
-    "@types/morgan": "^1.7.32",
+    "@types/method-override": "0.0.31",
+    "@types/morgan": "^1.7.35",
     "@types/node": "^7.0.28",
     "body-parser": "^1.17.2",
     "gulp": "^3.9.1",
@@ -33,15 +36,18 @@
     "gulp-typescript": "^3.1.7",
     "gulp-util": "^3.0.8",
     "merge2": "^1.0.3",
-    "morgan": "^1.8.2",
+    "morgan": "^1.9.0",
     "nodemon": "^1.11.0",
     "ts-node": "^3.0.4",
     "typescript": "^2.3.4"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
     "debug": "^2.6.8",
+    "errorhandler": "^1.5.0",
     "express": "^4.15.3",
+    "method-override": "^2.3.10",
     "typings": "^2.1.1"
   }
 }

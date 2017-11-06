@@ -1,8 +1,15 @@
 import * as bodyParser from "body-parser";
+import * as cookieParser from "cookie-parser";
 import * as express from "express";
+import * as logger from "morgan";
 import * as path from "path";
 
-class Server {
+import * as errorHandler from "errorHandler";
+import * as methodOverride from "method-override";
+// import errorHandler = require("errorhandler");
+// import methodOverride = require("method-override");
+
+export class Server {
 
 	public app: express.Application;
 
@@ -29,7 +36,7 @@ class Server {
 		this.app = express();
 
 		// configure application
-		this.config();
+		// this.config();
 	}
 }
 

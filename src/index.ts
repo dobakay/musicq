@@ -1,10 +1,10 @@
-var app = require("App");
 var debug = require("debug")("express:server");
 var http = require("http");
+var serverModule = require("./App");
 
 //get port from environment and store in Express.
 var port = normalizePort(process.env.PORT || 8080);
-
+var app = serverModule.Server.bootstrap().app;
 app.set("port", port);
 
 // create http server
@@ -20,7 +20,7 @@ server.on("error", onError);
 server.on("listening", onListening);
 
 
-function normalizePort(val) {
+function normalizePort(val: any) {
     var port = parseInt(val, 10);
 
     if(isNaN(port)) {
@@ -40,7 +40,7 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-function onError(error) {
+function onError(error: any) {
     if(error.syscall !== "listen") {
         throw error;
     }
