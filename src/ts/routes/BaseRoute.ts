@@ -57,7 +57,12 @@ export class BaseRoute {
         res.locals.title = this.title;
 
         //render view
-        res.render(view, options);
+        // res.render(view, options);
+
+        // res.status(500).json({
+        //     message: err.message,
+        //     error: err
+        // });
     }
 
 }

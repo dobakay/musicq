@@ -10,25 +10,16 @@ var ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 var tsProject = ts.createProject("tsconfig.json");
 
-// var paths = {
-//     target: {
-//         main: "./dist",
-//         clear: "dist/*",
-//         definitions: "dist/definitions",
-//         allJS: "dist/js/**/*"
-//     },
-//     source: {
-//         main: "src",
-//         all: "src/**/*",
-//     }
-// }
-
 var paths = {
     input: 'src/**/*',
     // NOTE: to set-up the source files for the tsProject variable,
     // add "files": ["src/ts/**/*"] to the tsconfig.json
     output: 'dist/',
     clear: 'dist/*',
+    html: {
+        input: ["src/public/*", "src/views/*"],
+        output: "dist/www/"
+    },
     scripts: {
         input: 'src/ts/*',
         output_definitions: "dist/js/definitions/",
@@ -42,12 +33,12 @@ var paths = {
     // }
 };
 
-gulp.task('clean-scripts', function () {
+gulp.task('clean', function () {
     return gulp.src(paths.clear, {read: false})
     .pipe(clean());
 });
 
-gulp.task('scripts', ['clean-scripts'], function() {
+gulp.task('scripts', function() {
     var tsResult = tsProject
         .src()
         .pipe(sourcemaps.init())
@@ -66,8 +57,14 @@ gulp.task('scripts', ['clean-scripts'], function() {
     ]);
 });
 
-gulp.task('watch', ['scripts'], function() {
-    gulp.watch(paths.input, ['scripts']);
+gulp.task('html', function() {
+    return gulp.src(paths.html.input)
+        .pipe(gulp.dest(paths.html.output));
+})
+
+// NOTE: order is essential
+gulp.task('watch', ['clean', 'scripts', 'html'], function() {
+    gulp.watch(paths.input, ['clean','scripts', 'html']);
 });
 
 gulp.task('server', ['watch'], function(cb) {
