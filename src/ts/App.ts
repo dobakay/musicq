@@ -4,10 +4,14 @@ import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
 
-import * as errorHandler from "errorHandler";
+// import * as errorHandler from "errorHandler";
+var errorHandler = require("errorhandler");
 import * as methodOverride from "method-override";
-// import errorHandler = require("errorhandler");
 // import methodOverride = require("method-override");
+
+// Routes
+import { IndexRoute } from "./routes/IndexRoute";
+// D: \Projects\MM\musicq\src\scripts\IndexRoute.ts
 
 export class Server {
 
@@ -62,13 +66,13 @@ export class Server {
 	 * @method config
 	 */
 	public config() {
-		
-		// add static paths
-		this.app.use(express.static(path.join(__dirname, "public")));
 
-		//configure pug
-		this.app.set("views", path.join(__dirname, "views"));
-		// this.app.set("views engine", "pug");
+		// add static paths
+		this.app.use(express.static(path.join(__dirname, "/public")));
+
+		// configure pug
+		this.app.set("views", path.join(__dirname, "/views"));
+		this.app.set("view engine", "pug");
 
 		//use logger middleware
 		this.app.use(logger("dev"));
@@ -88,6 +92,7 @@ export class Server {
 		//catch error 404 and forward to error errorhandler
 		this.app.use(function(err:any, req: express.Request, res: express.Response, next: express.NextFunction) {
 			err.status = 404;
+			console.log(err);
 			next(err);
 		});
 
@@ -97,13 +102,21 @@ export class Server {
 	}
 
 	/**
-   * Create router
+   * Create routes
    *
    * @class Server
-   * @method api
+   * @method routes
+   * @return void
    */
 	public routes() {
-		//empty for now
+		let router: express.Router;
+		router = express.Router();
+
+		// IndexRoute
+		IndexRoute.create(router);
+
+		//use router middleware
+		this.app.use(router);
 	}
 }
 

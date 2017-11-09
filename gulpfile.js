@@ -1,20 +1,51 @@
 var path = require("path");
 var gulp = require("gulp");
 var merge = require('merge2');
+var concat = require("gulp-concat");
 var clean = require('gulp-clean');
+var recursiveFolder = require('gulp-recursive-folder');
 // var run = require('gulp-run');
 var exec = require('child_process').exec;
 var ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 var tsProject = ts.createProject("tsconfig.json");
 
-gulp.task('default', ['server']);
+// var paths = {
+//     target: {
+//         main: "./dist",
+//         clear: "dist/*",
+//         definitions: "dist/definitions",
+//         allJS: "dist/js/**/*"
+//     },
+//     source: {
+//         main: "src",
+//         all: "src/**/*",
+//     }
+// }
+
+var paths = {
+    input: 'src/**/*',
+    // NOTE: to set-up the source files for the tsProject variable,
+    // add "files": ["src/ts/**/*"] to the tsconfig.json
+    output: 'dist/',
+    clear: 'dist/*',
+    scripts: {
+        input: 'src/ts/*',
+        output_definitions: "dist/js/definitions/",
+        output: 'dist/js/'
+    },
+    // docs: {
+    //     input: 'src/docs/*.{html,md,markdown}',
+    //     output: 'docs/',
+    //     templates: 'src/docs/_templates/',
+    //     assets: 'src/docs/assets/**'
+    // }
+};
 
 gulp.task('clean-scripts', function () {
-  return gulp.src('dist/*', {read: false})
+    return gulp.src(paths.clear, {read: false})
     .pipe(clean());
 });
-
 
 gulp.task('scripts', ['clean-scripts'], function() {
     var tsResult = tsProject
@@ -24,19 +55,19 @@ gulp.task('scripts', ['clean-scripts'], function() {
 
     return merge([  // Merge the two output streams, so this task is finished
                     // when the IO of both operations are done.
-        tsResult.dts.pipe(gulp.dest('dist/definitions')),
+        tsResult.dts.pipe(gulp.dest(paths.scripts.output_definitions)),
         tsResult.js.pipe(sourcemaps.write({
             // Return relative source map root directories per file.
             sourceRoot: function (file) {
                 var sourceFile = path.join(file.cwd, file.sourceMap.file);
                 return path.relative(path.dirname(sourceFile), file.cwd);
             }
-        })).pipe(gulp.dest('dist/js'))
+        })).pipe(gulp.dest(paths.scripts.output))
     ]);
 });
 
 gulp.task('watch', ['scripts'], function() {
-    gulp.watch('src/*', ['scripts']);
+    gulp.watch(paths.input, ['scripts']);
 });
 
 gulp.task('server', ['watch'], function(cb) {
@@ -47,3 +78,5 @@ gulp.task('server', ['watch'], function(cb) {
     cb(err);
   })
 })
+
+gulp.task('default', ['server']);

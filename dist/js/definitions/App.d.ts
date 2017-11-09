@@ -33,10 +33,11 @@ export declare class Server {
      */
     config(): void;
     /**
-   * Create router
+   * Create routes
    *
    * @class Server
-   * @method api
+   * @method routes
+   * @return void
    */
     routes(): void;
 }

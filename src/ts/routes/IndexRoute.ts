@@ -48,11 +48,11 @@ export class IndexRoute extends BaseRoute {
 
            //set options
            let options: Object = {
-               "message": "Welcome to MusicQ. Your party friend.";
+               "message": "Welcome to MusicQ. Your party friend."
            };
 
            // render template
-           this.render(req,res,"index", options);
+           this.render(req, res,"index", options);
        }
 
 }
