@@ -20,6 +20,10 @@ var paths = {
         input: ["src/public/*", "src/views/*"],
         output: "dist/www/"
     },
+    youtube_dl: {
+        input: "src/youtube_dl/*",
+        output: "dist/youtube_dl/"
+    },
     scripts: {
         input: 'src/ts/*',
         output_definitions: "dist/js/definitions/",
@@ -33,12 +37,12 @@ var paths = {
     // }
 };
 
-gulp.task('clean', function () {
+gulp.task('clean', () => {
     return gulp.src(paths.clear, {read: false})
     .pipe(clean());
 });
 
-gulp.task('scripts', function() {
+gulp.task('scripts', () => {
     var tsResult = tsProject
         .src()
         .pipe(sourcemaps.init())
@@ -57,23 +61,28 @@ gulp.task('scripts', function() {
     ]);
 });
 
-gulp.task('html', function() {
+gulp.task('html', () => {
     return gulp.src(paths.html.input)
         .pipe(gulp.dest(paths.html.output));
-})
-
-// NOTE: order is essential
-gulp.task('watch', ['clean', 'scripts', 'html'], function() {
-    gulp.watch(paths.input, ['clean','scripts', 'html']);
 });
 
-gulp.task('server', ['watch'], function(cb) {
+gulp.task('youtube_dl-copy', () => {
+    return gulp.src(paths.youtube_dl.input)
+        .pipe(gulp.dest(paths.youtube_dl.output));
+});
+
+// NOTE: order is essential
+gulp.task('watch', gulp.series('clean', 'scripts', 'html', 'youtube_dl-copy', () => {
+    gulp.watch(paths.input, gulp.series('clean', 'scripts', 'html', 'youtube_dl-copy'));
+}));
+
+gulp.task('server', gulp.series('watch', (cb) => {
     // return run('node dist/js/index.js').exec();
     exec('node dist/js/index.js', function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
-  })
-})
+  });
+}));
 
-gulp.task('default', ['server']);
+gulp.task('default', gulp.series('server'));

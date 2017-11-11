@@ -3,20 +3,20 @@ import {BaseRoute} from "./BaseRoute";
 
 /**
  * "/" route
- * 
+ *
  * @class IndexRoute
  */
 export class IndexRoute extends BaseRoute {
     /**
      * Create the routes.
-     * 
+     *
      * @class IndexRoute
      * @method create
      * @param router {Router} The Express Router.
      * @static
      */
      public static create(router: Router) {
-         console.log("[IndexRouter::create] Creating index route.");
+         console.log("[IndexRoute::create] Creating index route.");
 
          router.get("/", (req: Request, res: Response, next: NextFunction) => {
              new IndexRoute().index(req, res, next);
@@ -27,7 +27,7 @@ export class IndexRoute extends BaseRoute {
       * Constructor
       *
       * @class IndexRoute
-      * @costructor
+      * @constructor
       */
       constructor() {
           super();

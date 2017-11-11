@@ -20,7 +20,7 @@ export declare class IndexRoute extends BaseRoute {
      * Constructor
      *
      * @class IndexRoute
-     * @costructor
+     * @constructor
      */
     constructor();
     /**

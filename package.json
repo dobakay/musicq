@@ -29,7 +29,7 @@
     "@types/morgan": "^1.7.35",
     "@types/node": "^7.0.28",
     "body-parser": "^1.17.2",
-    "gulp": "^3.9.1",
+    "gulp": "github:gulpjs/gulp#4.0",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
     "gulp-recursive-folder": "^0.9.4",
