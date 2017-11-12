@@ -4,13 +4,18 @@ var merge = require('merge2');
 var concat = require("gulp-concat");
 var clean = require('gulp-clean');
 var recursiveFolder = require('gulp-recursive-folder');
-// var run = require('gulp-run');
+
 var exec = require('child_process').exec;
 var ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 var tsProject = ts.createProject("tsconfig.json");
 
+const spawn = require('child_process').spawn;
+let node;
+
+
 var paths = {
+    server_entry_point: 'dist/js/index.js',
     input: 'src/**/*',
     // NOTE: to set-up the source files for the tsProject variable,
     // add "files": ["src/ts/**/*"] to the tsconfig.json
@@ -72,17 +77,38 @@ gulp.task('youtube_dl-copy', () => {
 });
 
 // NOTE: order is essential
-gulp.task('watch', gulp.series('clean', 'scripts', 'html', 'youtube_dl-copy', () => {
-    gulp.watch(paths.input, gulp.series('clean', 'scripts', 'html', 'youtube_dl-copy'));
+gulp.task('build', gulp.series('clean', 'scripts', 'html', 'youtube_dl-copy'));
+
+function server() {
+    if (node) {
+        node.kill();
+    }
+
+    node = spawn('node', [paths.server_entry_point], { stdio: 'inherit' });
+    node.on('error', (code) => {
+        console.log('An unexpected error has occured!');
+        console.log(code);
+    })
+    node.on('close', function (code) {
+        if (code === 8) {
+            gulp.log('Error detected, waiting for changes...');
+        }
+    });
+}
+
+gulp.task('server', gulp.series('build', server));
+
+gulp.task('watch', gulp.series('server', () => {
+    gulp.watch(paths.input, () => {
+        gulp.run('server');
+    });
 }));
 
-gulp.task('server', gulp.series('watch', (cb) => {
-    // return run('node dist/js/index.js').exec();
-    exec('node dist/js/index.js', function (err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
-    cb(err);
-  });
-}));
+gulp.task('default', gulp.series('watch'));
 
-gulp.task('default', gulp.series('server'));
+// clean up if an error goes unhandled.
+process.on('exit', function () {
+    if (node) {
+        node.kill();
+    }
+});

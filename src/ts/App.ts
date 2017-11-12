@@ -11,6 +11,7 @@ import * as methodOverride from "method-override";
 
 // Routes
 import { IndexRoute } from "./routes/IndexRoute";
+import { DownloadTubeRoute } from "./routes/DownloadTubeRoute";
 // D: \Projects\MM\musicq\src\scripts\IndexRoute.ts
 
 export class Server {
@@ -91,9 +92,10 @@ export class Server {
 		this.app.use(methodOverride());
 
 		//catch error 404 and forward to error errorhandler
-		this.app.use(function(err:any, req: express.Request, res: express.Response, next: express.NextFunction) {
-			err.status = 404;
+		this.app.use((err:any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+			// err.status = 404;
 			console.log(err);
+			res.status(500).send();
 			next(err);
 		});
 
@@ -113,8 +115,9 @@ export class Server {
 		let router: express.Router;
 		router = express.Router();
 
-		// IndexRoute
-		IndexRoute.create(router);
+		// Routes init
+		IndexRoute.create(router); // /
+		// DownloadTubeRoute.create(router); // /youtube-download/:videoID
 
 		//use router middleware
 		this.app.use(router);

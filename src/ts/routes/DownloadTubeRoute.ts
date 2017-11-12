@@ -20,7 +20,7 @@ export class DownloadTubeRoute extends BaseRoute {
     public static create(router: Router) {
         console.log("[DownloadTubeRoute::create] Creating youtube download route.");
 
-        router.get("/youtube-download/", (req: Request, res: Response, next: NextFunction) => {
+        router.get("/youtube-download/:videoID", (req: Request, res: Response, next: NextFunction) => {
             new DownloadTubeRoute().download(req, res, next);
         });
     }
@@ -49,7 +49,7 @@ export class DownloadTubeRoute extends BaseRoute {
         this.title = "MusiQ Download Tube";
 
         let video_URL = "https://www.youtube.com/watch?v=${ req.params.videoID }"
-        const tube_dl = spawn('../youtube-dl/youtube-dl', [' --extract-audio', '--audio-format', 'mp3 ', video_URL]);
+        const tube_dl = spawn('../../youtube-dl/youtube-dl', [' --extract-audio', '--audio-format', 'mp3 ', video_URL]);
 
         tube_dl.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);

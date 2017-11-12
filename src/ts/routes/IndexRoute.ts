@@ -52,7 +52,7 @@ export class IndexRoute extends BaseRoute {
            };
 
            // render template
-           this.render(req, res,"index", options);
+           this.render(req, res,"./dist/www/index", options);
        }
 
 }

@@ -3,7 +3,7 @@ var http = require("http");
 var serverModule = require("./App");
 
 //get port from environment and store in Express.
-var port = normalizePort(process.env.PORT || 8080);
+var port = normalizePort(process.env.PORT || 3000);
 var app = serverModule.Server.bootstrap().app;
 app.set("port", port);
 
