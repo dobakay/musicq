@@ -117,7 +117,7 @@ export class Server {
 
 		// Routes init
 		IndexRoute.create(router); // /
-		// DownloadTubeRoute.create(router); // /youtube-download/:videoID
+		DownloadTubeRoute.create(router); // /youtube-download/:videoID
 
 		//use router middleware
 		this.app.use(router);

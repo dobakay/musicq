@@ -1,7 +1,9 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {BaseRoute} from "./BaseRoute";
 import { spawn } from "child_process";
-var fs = require("fs");
+import { fromDir, getSubStringBetweenTwoStrings } from "../utils";
+import { StringDecoder } from 'string_decoder';
+import fs from 'fs';
 
 /**
  * "/youtube-download" route
@@ -48,11 +50,25 @@ export class DownloadTubeRoute extends BaseRoute {
 
         this.title = "MusiQ Download Tube";
 
-        let video_URL = "https://www.youtube.com/watch?v=${ req.params.videoID }"
-        const tube_dl = spawn('../../youtube-dl/youtube-dl', [' --extract-audio', '--audio-format', 'mp3 ', video_URL]);
+        let video_URL = `https://www.youtube.com/watch?v=${ req.params.videoID}`;
 
-        tube_dl.stdout.on('data', (data) => {
-            console.log(`stdout: ${data}`);
+        let tube_dl = spawn('./dist/youtube_dl/youtube-dl', ['--extract-audio', '--audio-format', 'mp3', '--audio-quality', '9', video_URL]);
+
+        let decoder = new StringDecoder('utf8');
+        let dataStr:string;
+        let fileName:string;
+
+        tube_dl.stdout.on('data', (data: Buffer) => {
+            dataStr = decoder.write(data);
+            if(dataStr.indexOf('mp3') !== -1) {
+
+                fileName = getSubStringBetweenTwoStrings(dataStr, 'Destination: ', `-${req.params.videoID}.mp3`);
+                console.log(`FILE NAME IZ: ${fileName}`);
+            }
+        });
+
+        tube_dl.stdout.on('end', () => {
+            console.log(dataStr);
         });
 
         tube_dl.stderr.on('data', (data) => {
@@ -60,13 +76,15 @@ export class DownloadTubeRoute extends BaseRoute {
         });
 
         tube_dl.on('exit', (code) => {
-            console.log('Arguments:');
-            console.log(this);
-            console.log('TUBE_DL child process:');
-            console.log(tube_dl);
-            console.log('End of LOG');
+            // console.log('Arguments:');
+            // console.log(this);
+            // console.log('TUBE_DL child process:');
+            // console.log(tube_dl);
+            // console.log('End of LOG');
 
-            fs.readFile("./#{req.params.videoID}.mp3", (err: Error, data: any) => {
+
+
+            fs.readFile(`./${fileName}${req.params.videoID}.mp3`, (err: Error, data: any) => {
                 // We set our content type so consumers of our API know what they are getting
                 res.setHeader('Content-Type', 'audio/mpeg3');
                 res.send(data);

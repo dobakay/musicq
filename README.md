@@ -25,3 +25,9 @@ NOTES
     the gulp cli running the command `npm i -g gulp-cli`
 
 * Must check out Gulp [tutorial](https://markgoodyear.com/2014/01/getting-started-with-gulp/)
+    can't get Gulp properly configure *sadpandaface*
+
+Progress and Knowhow
+================================================================
+Have a working `/youtube-download/ZTY8vlKO9hg` route that will download audio.
+Learning how to debug with VSCode.
