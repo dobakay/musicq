@@ -23,3 +23,5 @@ NOTES
 * Using Gulp 4 for the new feature - the `gulp.series` (running sequentially tasks) requires instalation
     from the git repo running the command `npm install --save-dev gulpjs/gulp.git#4.0` and instalation of
     the gulp cli running the command `npm i -g gulp-cli`
+
+* Must check out Gulp [tutorial](https://markgoodyear.com/2014/01/getting-started-with-gulp/)
