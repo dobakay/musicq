@@ -3,16 +3,13 @@ var gulp = require("gulp");
 var merge = require('merge2');
 var concat = require("gulp-concat");
 var clean = require('gulp-clean');
+var watch = require('gulp-watch');
 var recursiveFolder = require('gulp-recursive-folder');
 
-var exec = require('child_process').exec;
 var ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 var tsProject = ts.createProject("tsconfig.json");
-
-const spawn = require('child_process').spawn;
-let node;
-
+var nodemon = require('gulp-nodemon');
 
 var paths = {
     server_entry_point: 'dist/js/index.js',
@@ -23,6 +20,7 @@ var paths = {
     clear: 'dist/*',
     html: {
         input: ["src/public/*", "src/views/*"],
+        clear: 'dist/www/*',
         output: "dist/www/"
     },
     youtube_dl: {
@@ -32,6 +30,7 @@ var paths = {
     scripts: {
         input: 'src/ts/*',
         output_definitions: "dist/js/definitions/",
+        clear: 'dist/js/*',
         output: 'dist/js/'
     },
     // docs: {
@@ -42,10 +41,18 @@ var paths = {
     // }
 };
 
+
 gulp.task('clean', () => {
-    return gulp.src(paths.clear, {read: false})
-    .pipe(clean());
+    return gulp.src(paths.clear, { read: false })
+        .pipe(clean());
 });
+
+function cleanTask(cleanTask, cleanPath) {
+    gulp.task(cleanTask, () => {
+        return gulp.src(cleanPath, { read: false })
+            .pipe(clean());
+    });
+}
 
 gulp.task('scripts', () => {
     var tsResult = tsProject
@@ -66,10 +73,20 @@ gulp.task('scripts', () => {
     ]);
 });
 
+cleanTask('clean:scripts', paths.scripts.clear);
+// gulp.task('watch:scripts', () => {
+//     gulp.watch(paths.scripts.input, gulp.series('clean:scripts', 'scripts'));
+// });
+
 gulp.task('html', () => {
     return gulp.src(paths.html.input)
         .pipe(gulp.dest(paths.html.output));
 });
+
+cleanTask('clean:html', paths.html.clear);
+// gulp.task('watch:html', () => {
+//     gulp.watch(paths.html.input, gulp.series('clean:html', 'html'));
+// });
 
 gulp.task('youtube_dl-copy', () => {
     return gulp.src(paths.youtube_dl.input)
@@ -79,36 +96,45 @@ gulp.task('youtube_dl-copy', () => {
 // NOTE: order is essential
 gulp.task('build', gulp.series('clean', 'scripts', 'html', 'youtube_dl-copy'));
 
-function server() {
-    if (node) {
-        node.kill();
-    }
+// SERVER start function
+const spawn = require('child_process').spawn;
+let node;
 
-    node = spawn('node', [paths.server_entry_point], { stdio: 'inherit' });
-    node.on('error', (code) => {
-        console.log('An unexpected error has occured!');
-        console.log(code);
-    })
-    node.on('close', function (code) {
-        if (code === 8) {
-            gulp.log('Error detected, waiting for changes...');
-        }
+// gulp.task('server:stop', () => {
+//     if (node) {
+//         node.kill(node.pid, 'SIGKILL');
+//     }
+// });
+
+gulp.task('server', () => {
+    // node = spawn('node', [paths.server_entry_point], { stdio: 'inherit' });
+    // node.on('error', (code) => {
+    //     console.log('An unexpected error has occured!');
+    //     console.log(code);
+    // })
+    // node.on('close', function (code) {
+    //     if (code === 8) {
+    //         gulp.log('Error detected, waiting for changes...');
+    //     }
+    // });
+    nodemon({
+        'script': paths.server_entry_point,
+        // 'ignore': './dist/www/*.js'
     });
-}
+});
 
-gulp.task('server', gulp.series('build', server));
+gulp.task('watch', () => {
+    watch(paths.scripts.input, gulp.series('clean:scripts', 'scripts'));
+    watch(paths.html.input, gulp.series('clean:html', 'html'));
+});
 
-gulp.task('watch', gulp.series('server', () => {
-    gulp.watch(paths.input, () => {
-        gulp.run('server');
-    });
-}));
+gulp.task('serve', gulp.series('server'));
 
-gulp.task('default', gulp.series('watch'));
+gulp.task('default', gulp.series('build', 'watch', 'server'));
 
 // clean up if an error goes unhandled.
-process.on('exit', function () {
-    if (node) {
-        node.kill();
-    }
-});
+// process.on('exit', function () {
+//     if (node) {
+//         node.kill('SIGKILL');
+//     }
+// });
