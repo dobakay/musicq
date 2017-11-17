@@ -1,9 +1,10 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {BaseRoute} from "./BaseRoute";
-import { spawn } from "child_process";
+import { spawn, exec } from "child_process";
 import { fromDir, getSubStringBetweenTwoStrings } from "../utils";
 import { StringDecoder } from 'string_decoder';
-import fs from 'fs';
+import * as request from 'request';
+var fs = require('fs');
 
 /**
  * "/youtube-download" route
@@ -47,8 +48,47 @@ export class DownloadTubeRoute extends BaseRoute {
      * @param next {NextFunction} Execute the next method.
      */
     public download(req: Request, res: Response, next: NextFunction) {
-
+        // this.downloadAudioToRoot(req, res);
         this.title = "MusiQ Download Tube";
+        this.streamAudio(req, res);
+        next();
+    }
+
+    public streamAudio(req: Request, res: Response) {
+        let video_URL = `http://www.youtube.com/watch?v=${req.params.videoID}`;
+        let youtubeDlUrl:string = '';
+        let decoder = new StringDecoder('utf8');
+        let options = { encoding: 'utf8'};
+
+        // # Spawn a child process to obtain the URL to the FLV(to the youtube vid)
+        let youtubeDlUrlChild = spawn('./dist/youtube_dl/youtube-dl', ['--simulate', '--get-url', video_URL]);
+        youtubeDlUrlChild.stdout.on('data', (data:Buffer) => {
+            youtubeDlUrl += decoder.write(data);
+        });
+
+        youtubeDlUrlChild.stdout.on('end', () => {
+            //Converting the buffer to a string is a little costly so let's do it upfront
+            youtubeDlUrl = youtubeDlUrl.substring(0, youtubeDlUrl.length - 1);
+            console.log(`SIE URL IZ: ${youtubeDlUrl}`);
+            // # Before we write the output, ensure that we're sending it back with the proper content type
+            // # Create an ffmpeg process to feed the video to.
+            let ffmpeg_child = spawn ("ffmpeg", ['-i', 'pipe:0', '-acodec', /*'libmp3lame',*/ '-f', 'mp3', '-']);
+            // # Setting up the output pipe before we set up the input pipe ensures wedon't loose any data.
+            // res.setHeader();
+            ffmpeg_child.stdout.pipe(res);
+            // # GET the FLV, pipe the response's body to our ffmpeg process.
+            request({
+                uri: youtubeDlUrl,
+                headers: {
+                    'Youtubedl-no-compression': 'True',
+                    'Content-Type': 'audio/mpeg3'
+                },
+                method: 'GET'
+            }).pipe(ffmpeg_child.stdin);
+        })
+    }
+
+    public downloadAudioToRoot(req: Request, res: Response) {
 
         let video_URL = `https://www.youtube.com/watch?v=${ req.params.videoID}`;
 
@@ -76,14 +116,6 @@ export class DownloadTubeRoute extends BaseRoute {
         });
 
         tube_dl.on('exit', (code) => {
-            // console.log('Arguments:');
-            // console.log(this);
-            // console.log('TUBE_DL child process:');
-            // console.log(tube_dl);
-            // console.log('End of LOG');
-
-
-
             fs.readFile(`./${fileName}${req.params.videoID}.mp3`, (err: Error, data: any) => {
                 // We set our content type so consumers of our API know what they are getting
                 res.setHeader('Content-Type', 'audio/mpeg3');
@@ -94,22 +126,6 @@ export class DownloadTubeRoute extends BaseRoute {
         tube_dl.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
         });
-
-
-        // # Spawn a child process to obtain FLV and use ffmpeg to convert it.
-        //     youtube_dl = spawn './youtube-dl', ['--extract-audio', '--audio-format', 'mp3', "http://www.youtube.com/watch?v=#{req.params.youtube_video_id}"]
-
-        // # Let's echo the output of the child to see what's going on
-        // youtube_dl.stdout.on 'data', (data) ->
-        //     console.log data.toString()
-        // # Incase something bad happens, we should write that out too.
-        //     youtube_dl.stderr.on 'data', (data) ->
-        //         process.stderr.write data
-        // # when we're done, let's send back the output
-        // youtube_dl.on 'exit', ->
-        //     readFile "./#{req.params.youtube_video_id}.mp3", (err, data) ->
-        // # We set our content type so consumers of our API know what they are getting
-        // res.send data, { 'Content-Type': 'audio/mpeg3' }
 
     }
 

@@ -28,6 +28,7 @@
     "@types/method-override": "0.0.31",
     "@types/morgan": "^1.7.35",
     "@types/node": "^7.0.28",
+    "@types/request": "^2.0.8",
     "body-parser": "^1.17.2",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-clean": "^0.3.2",
@@ -55,6 +56,7 @@
     "ffmpeg": "0.0.4",
     "ffprobe": "^1.1.0",
     "method-override": "^2.3.10",
+    "request": "^2.83.0",
     "typings": "^2.1.1"
   }
 }

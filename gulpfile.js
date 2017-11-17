@@ -130,7 +130,7 @@ gulp.task('watch', () => {
 
 gulp.task('serve', gulp.series('server'));
 
-gulp.task('default', gulp.series('build', 'watch', 'server'));
+gulp.task('default', gulp.series('build', 'server'));
 
 // clean up if an error goes unhandled.
 // process.on('exit', function () {
