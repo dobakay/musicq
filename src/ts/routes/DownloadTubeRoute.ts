@@ -74,7 +74,6 @@ export class DownloadTubeRoute extends BaseRoute {
             // # Create an ffmpeg process to feed the video to.
             let ffmpeg_child = spawn ("ffmpeg", ['-i', 'pipe:0', '-acodec', /*'libmp3lame',*/ '-f', 'mp3', '-']);
             // # Setting up the output pipe before we set up the input pipe ensures wedon't loose any data.
-            // res.setHeader();
             ffmpeg_child.stdout.pipe(res);
             // # GET the FLV, pipe the response's body to our ffmpeg process.
             request({
