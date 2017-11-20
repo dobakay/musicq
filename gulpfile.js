@@ -19,7 +19,7 @@ var paths = {
     output: 'dist/',
     clear: 'dist/*',
     html: {
-        input: ["src/public/*", "src/views/*"],
+        input: ["src/front-end/**/*"],
         clear: 'dist/www/*',
         output: "dist/www/"
     },
@@ -94,7 +94,7 @@ gulp.task('youtube_dl-copy', () => {
 });
 
 // NOTE: order is essential
-gulp.task('build', gulp.series('clean', 'scripts', 'html', 'youtube_dl-copy'));
+gulp.task('build', gulp.series('clean:scripts', 'scripts'));
 
 // SERVER start function
 const spawn = require('child_process').spawn;
@@ -125,7 +125,7 @@ gulp.task('server', () => {
 
 gulp.task('watch', () => {
     watch(paths.scripts.input, gulp.series('clean:scripts', 'scripts'));
-    watch(paths.html.input, gulp.series('clean:html', 'html'));
+    // watch(paths.html.input, gulp.series('clean:html', 'html'));
 });
 
 gulp.task('serve', gulp.series('server'));

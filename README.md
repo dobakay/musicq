@@ -26,6 +26,7 @@ NOTES
 
 * Must check out Gulp [tutorial](https://markgoodyear.com/2014/01/getting-started-with-gulp/)
     can't get Gulp properly configure *sadpandaface*
+* Some Angular know-how is needed. [tutorial](https://www.edureka.co/blog/angular-tutorial/)
 
 Progress and Knowhow
 ================================================================
