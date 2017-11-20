@@ -51,7 +51,7 @@ export class IndexRoute extends BaseRoute {
                "message": "Welcome to MusicQ. Your party friend."
            };
            // render template
-           res.sendfile("./dist/www/src/index.html");
+           res.sendfile("./dist/www/dist/index.html");
        }
 
 }
