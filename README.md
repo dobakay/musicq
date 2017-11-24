@@ -28,6 +28,7 @@ NOTES
     can't get Gulp properly configure * sadpandaface * 
 
 * Some Angular know-how is needed. [tutorial](https://www.edureka.co/blog/angular-tutorial/)
+    [tutorial2](https://www.concretepage.com/angular-2/angular-2-property-binding-example)
 
 * I thnink that I've selected a [html5 audio player](https://521dimensions.com/open-source/amplitudejs).
     One big plus to this player is the Soundcloud integration with the player.

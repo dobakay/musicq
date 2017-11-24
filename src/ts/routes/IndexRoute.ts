@@ -50,7 +50,6 @@ export class IndexRoute extends BaseRoute {
            let options: Object = {
                "message": "Welcome to MusicQ. Your party friend."
            };
-           // render template
            res.sendfile("./dist/www/dist/index.html");
        }
 

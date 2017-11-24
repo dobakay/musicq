@@ -3,11 +3,13 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
+import { MusicqComponent } from './musicq/musicq.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MusicqComponent
   ],
   imports: [
     BrowserModule
