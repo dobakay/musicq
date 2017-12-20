@@ -2,8 +2,8 @@
   "name": "musicq",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index",
-  "types": "lib/index",
+  "main": "js/index",
+  "types": "js/index",
   "scripts": {
     "start": "node ./dist/js/index.js",
     "build:live": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec tsc src/index.ts"
@@ -45,11 +45,14 @@
     "morgan": "^1.9.0",
     "nodemon": "^1.11.0",
     "ts-node": "^3.0.4",
-    "typescript": "^2.3.4"
+    "tslint": "^5.8.0",
+    "typescript": "^2.3.4",
+    "webpack": "^3.10.0"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
     "debug": "^2.6.8",
     "errorhandler": "^1.5.0",
     "express": "^4.15.3",

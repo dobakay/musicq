@@ -50,12 +50,12 @@ export class DownloadTubeRoute extends BaseRoute {
     public download(req: Request, res: Response, next: NextFunction) {
         // this.downloadAudioToRoot(req, res);
         this.title = "MusiQ Download Tube";
-        this.streamAudio(req, res);
-        next();
+        this.streamAudio(req, res, next);
     }
 
-    public streamAudio(req: Request, res: Response) {
-        let video_URL = `http://www.youtube.com/watch?v=${req.params.videoID}`;
+    public streamAudio(req: Request, res: Response, next: NextFunction) {
+        let videoID = 'ZTY8vlKO9hg'; // req.params.videoID
+        let video_URL = `http://www.youtube.com/watch?v=${videoID}`;
         let youtubeDlUrl:string = '';
         let decoder = new StringDecoder('utf8');
         let options = { encoding: 'utf8'};
@@ -71,23 +71,24 @@ export class DownloadTubeRoute extends BaseRoute {
             youtubeDlUrl = youtubeDlUrl.substring(0, youtubeDlUrl.length - 1);
             console.log(`SIE URL IZ: ${youtubeDlUrl}`);
             // # Before we write the output, ensure that we're sending it back with the proper content type
+            res.setHeader('Content-Type', 'audio/mpeg3');
             // # Create an ffmpeg process to feed the video to.
-            let ffmpeg_child = spawn ("ffmpeg", ['-i', 'pipe:0', '-acodec', /*'libmp3lame',*/ '-f', 'mp3', '-']);
+            let ffmpeg_child = spawn ("ffmpeg", ['-i', 'pipe:0', '-acodec', 'libmp3lame', '-f', 'mp3', '-']);
             // # Setting up the output pipe before we set up the input pipe ensures wedon't loose any data.
             ffmpeg_child.stdout.pipe(res);
             // # GET the FLV, pipe the response's body to our ffmpeg process.
             request({
                 uri: youtubeDlUrl,
                 headers: {
-                    'Youtubedl-no-compression': 'True',
-                    'Content-Type': 'audio/mpeg3'
+                    'Youtubedl-no-compression': 'True'
                 },
                 method: 'GET'
             }).pipe(ffmpeg_child.stdin);
+            next();
         })
     }
 
-    public downloadAudioToRoot(req: Request, res: Response) {
+    public downloadAudioToRoot(req: Request, res: Response, next: NextFunction) {
 
         let video_URL = `https://www.youtube.com/watch?v=${ req.params.videoID}`;
 
@@ -119,6 +120,7 @@ export class DownloadTubeRoute extends BaseRoute {
                 // We set our content type so consumers of our API know what they are getting
                 res.setHeader('Content-Type', 'audio/mpeg3');
                 res.send(data);
+                next();
             });
         });
 

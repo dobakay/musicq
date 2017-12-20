@@ -32,6 +32,6 @@ export declare class DownloadTubeRoute extends BaseRoute {
      * @param next {NextFunction} Execute the next method.
      */
     download(req: Request, res: Response, next: NextFunction): void;
-    streamAudio(req: Request, res: Response): void;
-    downloadAudioToRoot(req: Request, res: Response): void;
+    streamAudio(req: Request, res: Response, next: NextFunction): void;
+    downloadAudioToRoot(req: Request, res: Response, next: NextFunction): void;
 }

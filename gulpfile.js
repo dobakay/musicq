@@ -65,12 +65,30 @@ gulp.task('scripts', () => {
         tsResult.dts.pipe(gulp.dest(paths.scripts.output_definitions)),
         tsResult.js.pipe(sourcemaps.write({
             // Return relative source map root directories per file.
+            mapSources: (path) => path,
             sourceRoot: function (file) {
-                var sourceFile = path.join(file.cwd, file.sourceMap.file);
-                return path.relative(path.dirname(sourceFile), file.cwd);
+                // var sourceFile = path.join(`${__dirname}/dist/js/`, file.sourceMap.file);
+                // return path.relative(path.dirname(sourceFile), file.cwd);
+                return path.relative(file.relative, path.join(file.cwd, 'src'));
             }
         })).pipe(gulp.dest(paths.scripts.output))
     ]);
+
+    // return merge([  // Merge the two output streams, so this task is finished
+    //     // when the IO of both operations are done.
+    //     tsResult.dts.pipe(gulp.dest(paths.scripts.output_definitions)),
+    //     tsResult.js.pipe(sourcemaps.write({
+    //         mapSources: (path) => path, // This affects the "sources" attribute even if it is a no-op. I don't know why.
+    //         sourceRoot: (file) => {
+    //             return path.relative(file.relative, path.join(file.cwd, 'js/'));
+    //         }
+    //     }))
+    //         .pipe(gulp.dest(paths.scripts.output))
+    // ]);
+
+    // tsResult.dts.pipe(gulp.dest(paths.scripts.output_definitions));
+    // return tsResult.js.pipe(sourcemaps.write('.'))
+    //     .pipe(gulp.dest(paths.scripts.output));
 });
 
 cleanTask('clean:scripts', paths.scripts.clear);
@@ -129,8 +147,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('serve', gulp.series('server'));
-
-gulp.task('default', gulp.series('build', 'server'));
+gulp.task('default', gulp.series('server'));
 
 // clean up if an error goes unhandled.
 // process.on('exit', function () {

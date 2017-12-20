@@ -8,9 +8,21 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}\\dist\\js\\index.js",
+            "program": "${workspaceRoot}/src/ts/index.ts",
+            "protocol": "inspector",
+            "sourceMaps": true,
             "cwd": "${workspaceRoot}",
-            "outFiles": []
+            "outFiles": [
+                "${workspaceRoot}/dist/js/**/*.js"
+            ],
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
+            "env": {
+                "DEBUG": "express:*"
+            },
+            "stopOnEntry": true,
+            "console": "internalConsole",
+            "trace": "all"
         },
         {
             "type": "node",
@@ -18,6 +30,15 @@
             "name": "Attach to Process",
             "port": 5858,
             "outFiles": []
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Gulp task",
+            "program": "${workspaceFolder}/node_modules/gulp/bin/gulp.js",
+            "args": [
+                "build"
+            ]
         }
     ]
 }

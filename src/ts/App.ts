@@ -3,6 +3,7 @@ import * as cookieParser from "cookie-parser";
 import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
+var cors = require('cors');
 
 // import * as errorHandler from "errorHandler";
 var errorHandler = require("errorhandler");
@@ -78,6 +79,9 @@ export class Server {
 
 		//use logger middleware
 		this.app.use(logger("dev"));
+
+		// enable CORS
+		this.app.use(cors());
 
 		//use json from parser middleware
 		this.app.use(bodyParser.json());

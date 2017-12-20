@@ -32,6 +32,7 @@ NOTES
 
 * I thnink that I've selected a [html5 audio player](https://521dimensions.com/open-source/amplitudejs).
     One big plus to this player is the Soundcloud integration with the player.
+    [Consuming streams exmaple](https://m.serversideup.net/amplitudejs-for-live-stream-html5-audio-10f12a84df09)
 
 Progress and Knowhow
 ================================================================
