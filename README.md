@@ -14,6 +14,8 @@ NOTES
 * Using tutorial from [here](http://pauldbergeron.com/articles/streaming-youtube-to-mp3-audio-in-nodejs.html)
     to build the youtube-stream.
 
+* Test youtube-stream after switching on the server with VLC player [tutorial](https://www.youtube.com/watch?v=u0bhD9nWZJ0)
+
 * For youtube-dl to work for Windows users:
     1. download [youtube-dl](https://rg3.github.io/youtube-dl/)
     2. [install ffmpeg in prefered folder](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg)
