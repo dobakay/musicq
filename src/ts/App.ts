@@ -3,7 +3,7 @@ import * as cookieParser from "cookie-parser";
 import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
-var cors = require('cors');
+var cors = require("cors");
 
 // import * as errorHandler from "errorHandler";
 var errorHandler = require("errorhandler");
@@ -70,7 +70,7 @@ export class Server {
 	public config() {
 
 		// add static paths
-		this.app.use('/static', express.static(path.join(__dirname, '../www')));
+		this.app.use("/static", express.static(path.join(__dirname, "../www")));
 
 		// NOTE: NOT NEEDED for now
 		// configure pug template engine
@@ -87,7 +87,7 @@ export class Server {
 		this.app.use(bodyParser.json());
 
 		//use query string parser middleware
-		this.app.use(bodyParser.urlencoded({extended:true}));
+		this.app.use(bodyParser.urlencoded({extended: true}));
 
 		//use cookie parser middleware
 		this.app.use(cookieParser("SECRET_GOES_HERE"));
@@ -96,7 +96,7 @@ export class Server {
 		this.app.use(methodOverride());
 
 		//catch error 404 and forward to error errorhandler
-		this.app.use((err:any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+		this.app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
 			// err.status = 404;
 			console.log(err);
 			res.status(500).send();

@@ -25,7 +25,7 @@ NOTES
     the gulp cli running the command `npm i -g gulp-cli`
 
 * Must check out Gulp [tutorial](https://markgoodyear.com/2014/01/getting-started-with-gulp/)
-    can't get Gulp properly configure * sadpandaface * 
+    can't get Gulp properly configure * sadpandaface *
 
 * Some Angular know-how is needed. [tutorial](https://www.edureka.co/blog/angular-tutorial/)
     [tutorial2](https://www.concretepage.com/angular-2/angular-2-property-binding-example)
@@ -34,8 +34,12 @@ NOTES
     One big plus to this player is the Soundcloud integration with the player.
     [Consuming streams exmaple](https://m.serversideup.net/amplitudejs-for-live-stream-html5-audio-10f12a84df09)
 
+How to start
+=============================================================
+
+
 Progress and Knowhow
-================================================================
+=============================================================
 - Have a working `/youtube-download/ZTY8vlKO9hg` route that will download audio.
 - Learning how to debug with VSCode.
 - Learning Angular 4
