@@ -7,7 +7,7 @@ using the wi-fi so that the guests of the host can choose
 
 NOTES
 ===========================================================
-* Using tutorial from [here](http://mherman.org/blog/2016/11/05/developing-a-restful-api-with-node-and-typescript/#.WTa8GGiGNhE) 
+* Using tutorial from [here](http://mherman.org/blog/2016/11/05/developing-a-restful-api-with-node-and-typescript/#.WTa8GGiGNhE)
     and [here](http://brianflove.com/2016/11/08/typescript-2-express-node/)
     to build the Express server.
 
@@ -19,10 +19,6 @@ NOTES
     2. [install ffmpeg in prefered folder](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg)
     3. place contents of ffmpeg/bin/ folder where the youtube-dl.exe is.
     4. run `.\youtube-dl.exe --extract-audio --audio-format mp3 https://www.youtube.com/watch?v=${VIDEO_ID}` in prompt
-
-* Using Gulp 4 for the new feature - the `gulp.series` (running sequentially tasks) requires instalation
-    from the git repo running the command `npm install --save-dev gulpjs/gulp.git#4.0` and instalation of
-    the gulp cli running the command `npm i -g gulp-cli`
 
 * Must check out Gulp [tutorial](https://markgoodyear.com/2014/01/getting-started-with-gulp/)
     can't get Gulp properly configure * sadpandaface *
@@ -37,6 +33,13 @@ NOTES
 How to start
 =============================================================
 
+Server:
+* `gulp build` to build scripts
+* `gulp serve` to start server on port 8080
+
+App:
+* In a different console navigate to the `rootDirectory/dist/www`
+* Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 Progress and Knowhow
 =============================================================

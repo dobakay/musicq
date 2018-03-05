@@ -93,7 +93,7 @@ gulp.task('scripts', () => {
 
 cleanTask('clean:scripts', paths.scripts.clear);
 // gulp.task('watch:scripts', () => {
-//     gulp.watch(paths.scripts.input, gulp.series('clean:scripts', 'scripts'));
+//     gulp.watch(paths.scripts.input, ['clean:scripts', 'scripts']);
 // });
 
 gulp.task('html', () => {
@@ -103,7 +103,7 @@ gulp.task('html', () => {
 
 cleanTask('clean:html', paths.html.clear);
 // gulp.task('watch:html', () => {
-//     gulp.watch(paths.html.input, gulp.series('clean:html', 'html'));
+//     gulp.watch(paths.html.input, ['clean:html', 'html']);
 // });
 
 gulp.task('youtube_dl-copy', () => {
@@ -112,7 +112,7 @@ gulp.task('youtube_dl-copy', () => {
 });
 
 // NOTE: order is essential
-gulp.task('build', gulp.series('clean:scripts', 'scripts'));
+gulp.task('build', ['clean:scripts', 'scripts']);
 
 // SERVER start function
 const spawn = require('child_process').spawn;
@@ -142,12 +142,12 @@ gulp.task('server', () => {
 });
 
 gulp.task('watch', () => {
-    watch(paths.scripts.input, gulp.series('clean:scripts', 'scripts'));
-    // watch(paths.html.input, gulp.series('clean:html', 'html'));
+    watch(paths.scripts.input, ['clean:scripts', 'scripts']);
+    // watch(paths.html.input, ['clean:html', 'html']);
 });
 
-gulp.task('serve', gulp.series('server'));
-gulp.task('default', gulp.series('server'));
+gulp.task('serve', ['server']);
+gulp.task('default', ['server']);
 
 // clean up if an error goes unhandled.
 // process.on('exit', function () {

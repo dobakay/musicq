@@ -30,7 +30,7 @@
     "@types/node": "^7.0.28",
     "@types/request": "^2.0.8",
     "body-parser": "^1.17.2",
-    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
     "gulp-livereload": "^3.8.1",
