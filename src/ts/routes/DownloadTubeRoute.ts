@@ -55,13 +55,13 @@ export class DownloadTubeRoute extends BaseRoute {
 
     public streamAudio(req: Request, res: Response, next: NextFunction) {
         let videoID = "ZTY8vlKO9hg"; // req.params.videoID
-        let video_URL = `http://www.youtube.com/watch?v=${videoID}`;
+        let videoURL = `http://www.youtube.com/watch?v=${videoID}`;
         let youtubeDlUrl: string = "";
         let decoder = new StringDecoder("utf8");
         let options = { encoding: "utf8"};
 
         // # Spawn a child process to obtain the URL to the FLV(to the youtube vid)
-        let youtubeDlUrlChild = spawn("./dist/youtube_dl/youtube-dl", ["--simulate", "--get-url", video_URL]);
+        let youtubeDlUrlChild = spawn("./dist/youtube_dl/youtube-dl", ["--simulate", "--get-url", videoURL]);
         youtubeDlUrlChild.stdout.on("data", (data: Buffer) => {
             youtubeDlUrl += decoder.write(data);
         });
@@ -73,9 +73,9 @@ export class DownloadTubeRoute extends BaseRoute {
             // # Before we write the output, ensure that we're sending it back with the proper content type
             res.setHeader("Content-Type", "audio/mpeg3");
             // # Create an ffmpeg process to feed the video to.
-            let ffmpeg_child = spawn ("ffmpeg", ["-i", "pipe:0", "-acodec", "libmp3lame", "-f", "mp3", "-"]);
+            let ffmpegChild = spawn ("ffmpeg", ["-i", "pipe:0", "-acodec", "libmp3lame", "-f", "mp3", "-"]);
             // # Setting up the output pipe before we set up the input pipe ensures wedon't loose any data.
-            ffmpeg_child.stdout.pipe(res);
+            ffmpegChild.stdout.pipe(res);
             // # GET the FLV, pipe the response's body to our ffmpeg process.
             request({
                 uri: youtubeDlUrl,
@@ -83,39 +83,39 @@ export class DownloadTubeRoute extends BaseRoute {
                     "Youtubedl-no-compression": "True"
                 },
                 method: "GET"
-            }).pipe(ffmpeg_child.stdin);
+            }).pipe(ffmpegChild.stdin);
             next();
-        })
+        });
     }
 
     public downloadAudioToRoot(req: Request, res: Response, next: NextFunction) {
 
-        let video_URL = `https://www.youtube.com/watch?v=${ req.params.videoID}`;
+        let videoURL = `https://www.youtube.com/watch?v=${ req.params.videoID}`;
 
-        let tube_dl = spawn("./dist/youtube_dl/youtube-dl", ["--extract-audio", "--audio-format", "mp3", "--audio-quality", "9", video_URL]);
+        let tubeDl = spawn("./dist/youtube_dl/youtube-dl", ["--extract-audio", "--audio-format", "mp3", "--audio-quality", "9", videoURL]);
 
         let decoder = new StringDecoder("utf8");
-        let dataStr:string;
-        let fileName:string;
+        let dataStr: string;
+        let fileName: string;
 
-        tube_dl.stdout.on("data", (data: Buffer) => {
+        tubeDl.stdout.on("data", (data: Buffer) => {
             dataStr = decoder.write(data);
-            if(dataStr.indexOf("mp3") !== -1) {
+            if (dataStr.indexOf("mp3") !== -1) {
 
                 fileName = getSubStringBetweenTwoStrings(dataStr, "Destination: ", `-${req.params.videoID}.mp3`);
                 console.log(`FILE NAME IZ: ${fileName}`);
             }
         });
 
-        tube_dl.stdout.on("end", () => {
+        tubeDl.stdout.on("end", () => {
             console.log(dataStr);
         });
 
-        tube_dl.stderr.on("data", (data) => {
+        tubeDl.stderr.on("data", (data) => {
             console.log(`stderr: ${data}`);
         });
 
-        tube_dl.on("exit", (code) => {
+        tubeDl.on("exit", (code) => {
             fs.readFile(`./${fileName}${req.params.videoID}.mp3`, (err: Error, data: any) => {
                 // We set our content type so consumers of our API know what they are getting
                 res.setHeader("Content-Type", "audio/mpeg3");
@@ -124,7 +124,7 @@ export class DownloadTubeRoute extends BaseRoute {
             });
         });
 
-        tube_dl.on("close", (code) => {
+        tubeDl.on("close", (code) => {
             console.log(`child process exited with code ${code}`);
         });
 
