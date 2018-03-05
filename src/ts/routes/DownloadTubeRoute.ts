@@ -54,19 +54,34 @@ export class DownloadTubeRoute extends BaseRoute {
     }
 
     public streamAudio(req: Request, res: Response, next: NextFunction) {
-        let videoID = "ZTY8vlKO9hg"; // req.params.videoID
-        let videoURL = `http://www.youtube.com/watch?v=${videoID}`;
+        let videoID = req.params.videoID; //"ZTY8vlKO9hg";
+        let videoURL = "http://www.youtube.com/watch?v=" + videoID;
         let youtubeDlUrl: string = "";
         let decoder = new StringDecoder("utf8");
         let options = { encoding: "utf8"};
 
         // # Spawn a child process to obtain the URL to the FLV(to the youtube vid)
-        let youtubeDlUrlChild = spawn("./dist/youtube_dl/youtube-dl", ["--simulate", "--get-url", videoURL]);
-        youtubeDlUrlChild.stdout.on("data", (data: Buffer) => {
-            youtubeDlUrl += decoder.write(data);
+        let youtubeDlUrlChild = exec("\.\\dist\\youtube_dl\\youtube-dl --simulate --get-url " + videoURL, (err, stdout, stderr) => {
+            console.log(stderr.toString());
+            //Converting the buffer to a string is a little costly so let's do it upfront
+            youtubeDlUrl = stdout.toString();
+            youtubeDlUrl = youtubeDlUrl.substring(0, youtubeDlUrl.length - 1);
+            res.contentType("audio/mpeg3");
+            let ffmpegChild = spawn("ffmpeg", ["-i", "pipe:0", "-acodec", "libmp3lame", "-f", "mp3", "-"]);
+            ffmpegChild.stdout.pipe(res);
+            try {
+                var webhook = "http://www.youtube.com/";
+                console.log(webhook);
+                request({ url: youtubeDlUrl, uri: webhook, headers: { "Youtubedl-no-compression": "True" } }).pipe(ffmpegChild.stdin);
+            } catch (error) {
+                console.log(error);
+            }
         });
+        /* youtubeDlUrlChild.stdout.on("data", (data: Buffer) => {
+            youtubeDlUrl += decoder.write(data);
+        }); */
 
-        youtubeDlUrlChild.stdout.on("end", () => {
+        /* youtubeDlUrlChild.stdout.on("end", () => {
             //Converting the buffer to a string is a little costly so let's do it upfront
             youtubeDlUrl = youtubeDlUrl.substring(0, youtubeDlUrl.length - 1);
             console.log(`SIE URL IZ: ${youtubeDlUrl}`);
@@ -85,7 +100,7 @@ export class DownloadTubeRoute extends BaseRoute {
                 method: "GET"
             }).pipe(ffmpegChild.stdin);
             next();
-        });
+        }); */
     }
 
     public downloadAudioToRoot(req: Request, res: Response, next: NextFunction) {
