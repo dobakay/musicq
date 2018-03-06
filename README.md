@@ -32,6 +32,8 @@ NOTES
     One big plus to this player is the Soundcloud integration with the player.
     [Consuming streams exmaple](https://m.serversideup.net/amplitudejs-for-live-stream-html5-audio-10f12a84df09)
 
+* [Angular module for the audioplayer](https://github.com/gregorifaroux/angular-amplitudejs)
+
 How to start
 =============================================================
 
