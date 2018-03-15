@@ -60,6 +60,7 @@
     "ffprobe": "^1.1.0",
     "method-override": "^2.3.10",
     "request": "^2.83.0",
-    "typings": "^2.1.1"
+    "typings": "^2.1.1",
+    "youtube-audio-stream": "^0.2.0"
   }
 }

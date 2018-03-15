@@ -7,7 +7,7 @@ import * as Amplitude from 'amplitudejs';
   styleUrls: ['./musicq.component.scss']
 })
 export class MusicqComponent implements OnInit {
-  currentlyPlaying : string = '';
+  currentlyPlaying: '';
 
   constructor() { }
 

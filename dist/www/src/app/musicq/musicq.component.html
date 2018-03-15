@@ -1,7 +1,7 @@
-<audio id="single-song" src="localhost:25447/youtube-download/ZTY8vlKO9hg;?type=http&nocache=66" type="audio/mp3" preload="auto" autoplay="true" controls="controls">
+<!-- <audio id="single-song" src="localhost:25447/youtube-download/ZTY8vlKO9hg;?type=http&nocache=66" type="audio/mp3" preload="auto" autoplay="true" controls="controls"> -->
   <!--<source type="audio/mpeg3" id="single-song"/>-->
-    Your browser does not support the audio tag.
-</audio>
+    <!-- Your browser does not support the audio tag. -->
+<!-- </audio> -->
 <!--<div>
   <button onclick="document.getElementById('single-song').play()">Play the Audio</button>
   <button onclick="document.getElementById('single-song').pause()">Pause the Audio</button>
@@ -78,3 +78,20 @@
     </div>
   </div>
 </div>-->
+
+<div id="player">
+  <div id="player-top">
+    <div id="amplitude-play-pause" class="amplitude-paused"></div>
+  </div>
+</div>
+<div id="single-song-container">
+  <audio id="single-song" preload="none">
+    <source src="http://localhost:8080/youtube-download/ZTY8vlKO9hg;" type=" audio/mp3 " id="single-song " /> Your browser does not support the audio tag.
+  </audio>
+</div>
+<script type="text/javascript ">
+    amplitude_config = {
+        'amplitude_live': true,
+        'amplitude_live_source': 'http://localhost:8080/youtube-download/ZTY8vlKO9hg;’,
+    }
+</script>
