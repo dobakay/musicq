@@ -1,46 +1,17 @@
-var path = require("path");
-var gulp = require("gulp");
-var merge = require('merge2');
-var concat = require("gulp-concat");
-var clean = require('gulp-clean');
-var watch = require('gulp-watch');
-var recursiveFolder = require('gulp-recursive-folder');
+let path = require("path");
+let gulp = require("gulp");
+let merge = require('merge2');
+let concat = require("gulp-concat");
+let clean = require('gulp-clean');
+let watch = require('gulp-watch');
+let recursiveFolder = require('gulp-recursive-folder');
 
-var ts = require("gulp-typescript");
-var sourcemaps = require('gulp-sourcemaps');
-var tsProject = ts.createProject("tsconfig.json");
-var nodemon = require('gulp-nodemon');
+let ts = require("gulp-typescript");
+let sourcemaps = require('gulp-sourcemaps');
+let tsProject = ts.createProject("tsconfig.json");
+let nodemon = require('gulp-nodemon');
 
-var paths = {
-    server_entry_point: 'dist/js/index.js',
-    input: 'src/**/*',
-    // NOTE: to set-up the source files for the tsProject variable,
-    // add "files": ["src/ts/**/*"] to the tsconfig.json
-    output: 'dist/',
-    clear: 'dist/*',
-    html: {
-        input: ["src/front-end/**/*"],
-        clear: 'dist/www/*',
-        output: "dist/www/"
-    },
-    youtube_dl: {
-        input: "src/youtube_dl/*",
-        output: "dist/youtube_dl/"
-    },
-    scripts: {
-        input: 'src/ts/*',
-        output_definitions: "dist/js/definitions/",
-        clear: 'dist/js/*',
-        output: 'dist/js/'
-    },
-    // docs: {
-    //     input: 'src/docs/*.{html,md,markdown}',
-    //     output: 'docs/',
-    //     templates: 'src/docs/_templates/',
-    //     assets: 'src/docs/assets/**'
-    // }
-};
-
+import * as paths from "paths.json";
 
 gulp.task('clean', () => {
     return gulp.src(paths.clear, { read: false })
@@ -55,7 +26,7 @@ function cleanTask(cleanTask, cleanPath) {
 }
 
 gulp.task('scripts', () => {
-    var tsResult = tsProject
+    let tsResult = tsProject
         .src()
         .pipe(sourcemaps.init())
         .pipe(tsProject());
@@ -67,7 +38,7 @@ gulp.task('scripts', () => {
             // Return relative source map root directories per file.
             mapSources: (path) => path,
             sourceRoot: function (file) {
-                // var sourceFile = path.join(`${__dirname}/dist/js/`, file.sourceMap.file);
+                // let sourceFile = path.join(`${__dirname}/dist/js/`, file.sourceMap.file);
                 // return path.relative(path.dirname(sourceFile), file.cwd);
                 return path.relative(file.relative, path.join(file.cwd, 'src'));
             }
@@ -92,9 +63,6 @@ gulp.task('scripts', () => {
 });
 
 cleanTask('clean:scripts', paths.scripts.clear);
-// gulp.task('watch:scripts', () => {
-//     gulp.watch(paths.scripts.input, ['clean:scripts', 'scripts']);
-// });
 
 gulp.task('html', () => {
     return gulp.src(paths.html.input)
@@ -102,9 +70,6 @@ gulp.task('html', () => {
 });
 
 cleanTask('clean:html', paths.html.clear);
-// gulp.task('watch:html', () => {
-//     gulp.watch(paths.html.input, ['clean:html', 'html']);
-// });
 
 gulp.task('youtube_dl-copy', () => {
     return gulp.src(paths.youtube_dl.input)
