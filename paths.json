@@ -1,30 +1,30 @@
 
 {
-    server_entry_point: "dist/js/index.js",
-    input: "src/**/*",
-    output: "dist/",
-    clear: "dist/*",
-    html: {
-        input: [
+    "server_entry_point": "dist/js/index.js",
+    "input": "src/**/*",
+    "output": "dist/",
+    "clear": "dist/*",
+    "html": {
+        "input": [
             "src/front-end/**/*"
         ],
-        clear: "dist/www/*",
-        output: "dist/www/"
+        "clear": "dist/www/*",
+        "output": "dist/www/"
     },
-    youtube_dl: {
-        input: "src/youtube_dl/*",
-        output: "dist/youtube_dl/"
+    "youtube_dl": {
+        "input": "src/youtube_dl/*",
+        "output": "dist/youtube_dl/"
     },
-    scripts: {
-        input: "src/ts/*",
-        output_definitions: "dist/js/definitions/",
-        clear: "dist/js/*",
-        output: "dist/js/"
+    "scripts": {
+        "input": "src/ts/*",
+        "output_definitions": "dist/js/definitions/",
+        "clear": "dist/js/*",
+        "output": "dist/js/"
     },
-    docs: {
-        input: "src/docs/*.{html,md,markdown}",
-        output: "docs/",
-        templates: "src/docs/_templates/",
-        assets: "src/docs/assets/**"
+    "docs": {
+        "input": "src/docs/*.{html,md,markdown}",
+        "output": "docs/",
+        "templates": "src/docs/_templates/",
+        "assets": "src/docs/assets/**"
     }
 }

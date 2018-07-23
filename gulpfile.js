@@ -1,3 +1,5 @@
+'use strict';
+
 let path = require("path");
 let gulp = require("gulp");
 let merge = require('merge2');
@@ -11,7 +13,7 @@ let sourcemaps = require('gulp-sourcemaps');
 let tsProject = ts.createProject("tsconfig.json");
 let nodemon = require('gulp-nodemon');
 
-import * as paths from "paths.json";
+let paths = require("./paths.json");
 
 gulp.task('clean', () => {
     return gulp.src(paths.clear, { read: false })

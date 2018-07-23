@@ -34,6 +34,14 @@ NOTES
 
 * [Angular module for the audioplayer](https://github.com/gregorifaroux/angular-amplitudejs)
 
+Prerequisites
+=============================================================
+* Use atleast node v.6
+* Run `npm install -g @angular/cli@latest` to install angular-cli globally
+
+* In project folder run `npm install` to add node modules
+* Navigate to `dist/www/` and run npm install again.
+
 How to start
 =============================================================
 
