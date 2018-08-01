@@ -1,5 +1,6 @@
 'use strict';
 
+let exec = require('child_process').exec;
 let path = require("path");
 let gulp = require("gulp");
 let merge = require('merge2');
@@ -82,8 +83,8 @@ gulp.task('youtube_dl-copy', () => {
 gulp.task('build', ['clean:scripts', 'scripts']);
 
 // SERVER start function
-const spawn = require('child_process').spawn;
-let node;
+// const spawn = require('child_process').spawn;
+// let node;
 
 // gulp.task('server:stop', () => {
 //     if (node) {
@@ -92,16 +93,6 @@ let node;
 // });
 
 gulp.task('server', () => {
-    // node = spawn('node', [paths.server_entry_point], { stdio: 'inherit' });
-    // node.on('error', (code) => {
-    //     console.log('An unexpected error has occured!');
-    //     console.log(code);
-    // })
-    // node.on('close', function (code) {
-    //     if (code === 8) {
-    //         gulp.log('Error detected, waiting for changes...');
-    //     }
-    // });
     nodemon({
         'script': paths.server_entry_point,
         // 'ignore': './dist/www/*.js'
