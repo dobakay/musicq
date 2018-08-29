@@ -1,3 +1,4 @@
+/// <reference types="express" />
 import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "./BaseRoute";
 /**

@@ -1,64 +1,21 @@
-<div id="player">
-  <div id="amplitude-left">
-    <img amplitude-song-info="cover_art_url" amplitude-main-song-info="true" />
-  </div>
-  <div id="player-left-bottom">
-    <audio id="single-song" preload="none">
-      <source src="localhost:3000/youtube-download/ZTY8vlKO9hg;" type="audio/mp3"  id="single-song"/>
-        Your browser does not support the audio tag.
-    </audio>
-    <div id="time-container">
+<div [ngStyle]="backgroundStyle">
+  <!-- <music-search (query)="handleQuery($event)" (update)="handleUpdate($event)" [tracks]="filteredTracks"></music-search>
 
-      <span class="current-time">
-        <span class="amplitude-current-minutes" amplitude-main-current-minutes="true"></span>:
-        <span class="amplitude-current-seconds" amplitude-main-current-seconds="true"></span>
-      </span>
+  <music-details [title]="title"></music-details>
 
-      <div id="progress-container">
-        <input type="range" class="amplitude-song-slider" amplitude-main-song-slider="true" />
-        <progress id="song-played-progress" class="amplitude-song-played-progress" amplitude-main-song-played-progress="true"></progress>
-        <progress id="song-buffered-progress" class="amplitude-buffered-progress" value="0"></progress>
-      </div>
+  <music-player (random)="handleRandom($event)" (backward)="handleBackward()" (forward)="handleForward()" (pauseplay)="handlePausePlay()"
+    (stop)="handleStop()" [paused]="paused"></music-player>
 
-      <span class="duration">
-        <span class="amplitude-duration-minutes" amplitude-main-duration-minutes="true"></span>:
-        <span class="amplitude-duration-seconds" amplitude-main-duration-seconds="true"></span>
-      </span>
-    </div>
-
-
-    <div id="control-container">
-
-      <div id="repeat-container">
-        <div class="amplitude-repeat" id="repeat"></div>
-        <div class="amplitude-shuffle amplitude-shuffle-off" id="shuffle"></div>
-      </div>
-
-      <div id="central-control-container">
-        <div id="central-controls">
-          <div class="amplitude-prev" id="previous"></div>
-          <div class="amplitude-play-pause" amplitude-main-play-pause="true" id="play-pause"></div>
-          <div class="amplitude-next" id="next"></div>
-        </div>
-      </div>
-
-      <div id="volume-container">
-        <div class="volume-controls">
-          <div class="amplitude-mute amplitude-not-muted"></div>
-          <input type="range" class="amplitude-volume-slider" />
-          <div class="ms-range-fix"></div>
-        </div>
-        <div class="amplitude-shuffle amplitude-shuffle-off" id="shuffle-right"></div>
-      </div>
-    </div>
-
+  <music-progress [current]="position" [elapsed]="elapsed" [total]="duration"></music-progress>
     <div id="meta-container">
-      <span amplitude-song-info="name" amplitude-main-song-info="true" class="song-name"></span>
+      <span amplitude-song-info="name" amplitude-main-song-info="true" class="song-name"></span> -->
 
-      <div class="song-artist-album">
+      <!--<div class="song-artist-album">
         <span amplitude-song-info="artist" amplitude-main-song-info="true"></span>
         <span amplitude-song-info="album" amplitude-main-song-info="true"></span>
       </div>
-    </div>
-    </div>
+    </div>-->
+
+
+    <!-- </div>  -->
 </div>

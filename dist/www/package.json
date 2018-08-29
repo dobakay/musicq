@@ -19,13 +19,16 @@
     "@angular/core": "^6.1.0",
     "@angular/forms": "^6.1.0",
     "@angular/http": "^6.1.0",
+    "@angular/material": "^6.4.2",
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
     "@types/amplitude-js": "^2.12.5",
     "amplitudejs": "^3.2.3",
     "core-js": "^2.5.4",
-    "rxjs": "^6.0.0",
+    "google-auth-library": "^1.6.1",
+    "rxjs": "^6.2.2",
+    "rxjs-compat": "^6.2.2",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

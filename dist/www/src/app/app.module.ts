@@ -2,9 +2,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
-// services
+// API services
+import { YoutubeApiService } from '../services/youtube-api/api.service';
+import {ApiService } from '../services/api/api.service';
+
+// Music service
+import { MusicService } from '../services/music-service/music-service.service';
+
 import { LocalFileService } from '../services/localfile.service';
-import { AmplitudeService } from '../services/amplitude.service/amplitude.service';
+
 
 // components
 import { AppComponent } from './app.component';
@@ -14,14 +20,18 @@ import { MusicqComponent } from './musicq/musicq.component';
 @NgModule({
   declarations: [
     AppComponent,
-    MusicqComponent
+    MusicqComponent,
   ],
   imports: [
     BrowserModule,
     HttpModule
   ],
-  providers: [ AmplitudeService,
-                LocalFileService],
+  providers: [
+    LocalFileService,
+    MusicService,
+    YoutubeApiService,
+    ApiService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
