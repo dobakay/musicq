@@ -1,13 +1,16 @@
 <div class="thumb-container"
   (mousedown)="selectCard()" (mouseup)="selectCard()" 
-  (mouseover)="selectCard()" (mouseout)="selectCard()">
-  <div class="thumb" [ngClass]="this.clicked? 'selected' : '' ">
+  (mouseover)="hoverCard()" (mouseout)="hoverCard()"
+  [ngClass]="this.hovered? 'hovered' : '' ">
+  <div class="thumb" [ngClass]="this.hovered? 'hovered' : '' ">
     <img src="https://lastfm-img2.akamaized.net/i/u/ar0/bdaf48908c274821bb7c2f3e61079751" alt="">
+
     <p class="length-background"></p>
     <p class="length">4:20</p>
-  </div>
-  <div class="info">
-      <p class="title">Pushing Buttons</p>
-      <p class="artist">Tha Trickaz</p>
+    <div class="info-background"></div>
+    <div class="info">
+        <p class="title">Pushing Buttons</p>
+        <p class="artist">Tha Trickaz</p>
+    </div>
   </div>
 </div>

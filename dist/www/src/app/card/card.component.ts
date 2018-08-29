@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class CardComponent implements OnInit {
 
   clicked = false;
+  hovered = false;
   constructor() { }
 
   ngOnInit() {
@@ -16,6 +17,10 @@ export class CardComponent implements OnInit {
 
   selectCard() {
     this.clicked = !this.clicked;
+  }
+
+  hoverCard() {
+    this.hovered = !this.hovered;
   }
 
 }
