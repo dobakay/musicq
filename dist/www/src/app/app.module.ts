@@ -9,12 +9,14 @@ import { AmplitudeService } from '../services/amplitude.service/amplitude.servic
 // components
 import { AppComponent } from './app.component';
 import { MusicqComponent } from './musicq/musicq.component';
+import { CardComponent } from './card/card.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MusicqComponent
+    MusicqComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,
