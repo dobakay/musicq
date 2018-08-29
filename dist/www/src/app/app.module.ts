@@ -15,12 +15,14 @@ import { LocalFileService } from '../services/localfile.service';
 // components
 import { AppComponent } from './app.component';
 import { MusicqComponent } from './musicq/musicq.component';
+import { CardComponent } from './card/card.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MusicqComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,
