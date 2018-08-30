@@ -20,13 +20,15 @@ import { LocalFileService } from '../services/localfile.service';
 import { AppComponent } from './app.component';
 import { MusicqComponent } from './musicq/musicq.component';
 import { CardComponent } from './card/card.component';
+import { SearchComponent } from './search/search.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MusicqComponent,
-    CardComponent
+    CardComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MusicService } from '../../services/music-service/music-service.service';
 import { YoutubeApiService } from '../../services/youtube-api/api.service';
 import { Observable, from} from 'rxjs';
-import { map, filter, catchError, mergeMap } from 'rxjs/operators';
+import { map, filter, catchError, mergeMap, flatMap } from 'rxjs/operators';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -17,7 +17,7 @@ export class MusicqComponent implements OnInit {
   duration;
   tracks: any[] = [];
   backgroundStyle;
-  searchMatches: any[];
+  searchMatches = [];
 
   constructor(private musicService: MusicService, private youtube: YoutubeApiService) {}
 
@@ -30,17 +30,23 @@ export class MusicqComponent implements OnInit {
     // this.musicService.audio.onend = this.handleEnded.bind(this);
 
     // this.musicService.audio.ontimeupdate = this.handleTimeUpdate.bind(this);
-    setTimeout(() => {
-      this.youtube.init().then(() => {
-        let search = from (this.youtube.search('drum and bass'));
-        search
-          .pipe(map(data=>data.items))
-          .subscribe((res) => {
-            this.searchMatches = res;
-            console.log(this.searchMatches); 
-          });
+    this.youtube.init().then(() => {
+      this.search({_query: 'backspin33rpm'});
+    });
+  }
+
+  search(e) {
+    this.searchMatches = [];
+    let match = from (this.youtube.search(e._query));
+    match
+      .pipe(
+        flatMap((data) => data['items']),
+        filter((item) => item['id'].kind === "youtube#video")
+      )
+      .subscribe((res) => {
+        console.log(res);
+        this.searchMatches.push(res);
       });
-    })
   }
 
   playTestTrack() {

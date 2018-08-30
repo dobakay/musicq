@@ -1,23 +1,5 @@
-<div [ngStyle]="backgroundStyle">
-  <!-- <music-search (query)="handleQuery($event)" (update)="handleUpdate($event)" [tracks]="filteredTracks"></music-search>
-
-  <music-details [title]="title"></music-details>
-
-  <music-player (random)="handleRandom($event)" (backward)="handleBackward()" (forward)="handleForward()" (pauseplay)="handlePausePlay()"
-    (stop)="handleStop()" [paused]="paused"></music-player>
-
-  <music-progress [current]="position" [elapsed]="elapsed" [total]="duration"></music-progress>
-    <div id="meta-container">
-      <span amplitude-song-info="name" amplitude-main-song-info="true" class="song-name"></span> -->
-
-      <!--<div class="song-artist-album">
-        <span amplitude-song-info="artist" amplitude-main-song-info="true"></span>
-        <span amplitude-song-info="album" amplitude-main-song-info="true"></span>
-      </div>
-    </div>-->
-
-
-    <!-- </div>  -->
+<div class="search-container">
+  <search (searchexec)="search($event)"></search>
 </div>
 <div class="musicq-container">
   <div class="card-container">
