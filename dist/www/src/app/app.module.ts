@@ -2,7 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
+// APIs Dependencies
+import { ScriptsService } from '../services/external.scripts.service/external.scripts.service';
+
 // API services
+import { ClientSecret } from '../services/youtube-api/client.secret';
 import { YoutubeApiService } from '../services/youtube-api/api.service';
 import {ApiService } from '../services/api/api.service';
 
@@ -30,7 +34,9 @@ import { CardComponent } from './card/card.component';
   ],
   providers: [
     LocalFileService,
+    ScriptsService,
     MusicService,
+    ClientSecret,
     YoutubeApiService,
     ApiService
   ],

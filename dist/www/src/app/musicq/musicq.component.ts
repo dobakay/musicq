@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MusicService } from '../../services/music-service/music-service.service';
+import { YoutubeApiService } from '../../services/youtube-api/api.service';
+import { Observable, from} from 'rxjs';
+import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -14,22 +17,38 @@ export class MusicqComponent implements OnInit {
   duration;
   tracks: any[] = [];
   backgroundStyle;
+  searchMatches: any[];
 
-  constructor(private musicService: MusicService) {}
+  constructor(private musicService: MusicService, private youtube: YoutubeApiService) {}
 
   ngOnInit() {
     // this.musicService.getPlaylistTracks().subscribe(tracks => {
     //   this.tracks = tracks;
     //   this.handleRandom();
     // });
-    this.playTestTrack();
-    this.musicService.audio.onend = this.handleEnded.bind(this);
+    // this.playTestTrack();
+    // this.musicService.audio.onend = this.handleEnded.bind(this);
 
-    this.musicService.audio.ontimeupdate = this.handleTimeUpdate.bind(this);
+    // this.musicService.audio.ontimeupdate = this.handleTimeUpdate.bind(this);
+    setTimeout(() => {
+      this.youtube.init().then(() => {
+        let search = from (this.youtube.search('drum and bass'));
+        search
+          .pipe(map(data=>data.items))
+          .subscribe((res) => {
+            this.searchMatches = res;
+            console.log(this.searchMatches); 
+          });
+      });
+    })
   }
 
   playTestTrack() {
     this.musicService.play('http://localhost:8080/youtube-download/ZTY8vlKO9hg', {});
+  }
+
+  play(e) {
+    this.musicService.play('http://localhost:8080/youtube-download/'+ e.songId, {});
   }
 
   handleEnded(e) {

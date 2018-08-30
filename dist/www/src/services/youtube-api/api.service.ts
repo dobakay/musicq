@@ -1,18 +1,87 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-// import { google } from 'googleapis';
 import { Observable } from 'rxjs/internal/Observable';
+import { ScriptsService } from '../external.scripts.service/external.scripts.service';
+import { ClientSecret } from './client.secret';
+import { resolve } from 'url';
 // const OAuth2 = google.auth.OAuth2;
-// const SCOPES = ['https://www.googleapis.com/auth/youtube.readonly'];
+const SCOPE = 'https://www.googleapis.com/auth/youtube.readonly';
+
+declare var gapi: any;
 
 @Injectable({
   providedIn: 'root'
 })
 export class YoutubeApiService {
 
-  private youtubeAPIkey: 'AIzaSyA4POCoWfF4VTyUhaaV6YjGBCFdSrjm6Bw';
-  constructor(private http: Http) {
-    // this.getJSON().subscribe(data =>  console.log(data), error => console.log(error));
+  constructor(private http: Http, private externalScripts: ScriptsService, private clientCredential: ClientSecret) {
+  }
+
+  init():Promise<any> {
+    return this.externalScripts.loadScript('GAPI')
+                .then((data) => {
+                  return this.getGapis();
+                })
+                .then(() => {
+                  return this.authorization();
+                })
+                .then(() => {
+                  return this.setClient();
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
+  }
+
+  getGapis() {
+    return new Promise((resolve, reject) => {
+      gapi.load('auth:client', () => {
+        resolve();
+      });
+    });
+  }
+
+  /**
+  * Authorize Google Compute Engine API.
+  */
+  authorization() {
+      return gapi.auth.authorize({
+        client_id: this.clientCredential.clientId,
+        scope: SCOPE,
+        immediate: false
+      }, (authResult) => {
+            if (authResult && !authResult.error) {
+              // window.alert('Auth was successful!');
+              return Promise.resolve();
+            } else {
+              // window.alert('Auth was not successful');
+              console.log(authResult.error);
+              return Promise.reject(authResult.error);
+            }
+      });
+  }
+
+  setClient() {
+    return new Promise((resolve, reject) => {
+      gapi.client.load('youtube', 'v3', () => {
+        resolve();
+      });
+    });
+  }
+
+  search(q?) {
+    if(gapi.client) {
+      let request = gapi.client.youtube.search.list({
+        q: q || 'tha trickaz',
+        part: 'snippet'
+      });
+    
+      return new Promise((resolve, reject) => {
+        request.execute((response) => {
+          resolve(response);
+        });
+      });
+    }
   }
 
   prepareUrl(url) {

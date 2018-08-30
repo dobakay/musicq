@@ -14,10 +14,6 @@
             width: 200px;
             height: 200px;
 
-            -webkit-filter: blur(1px);
-            -moz-filter: blur(1px);
-            -o-filter: blur(1px);
-            -ms-filter: blur(1px);
             filter: blur(1px);
             transition: filter 1.5s;
         }
@@ -46,10 +42,6 @@
 
     .thumb.hovered {
         img {
-            -webkit-filter: blur(0);
-            -moz-filter: blur(0);
-            -o-filter: blur(0);
-            -ms-filter: blur(0);
             filter: blur(0);
         }
     }

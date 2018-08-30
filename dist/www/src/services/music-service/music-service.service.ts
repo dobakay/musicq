@@ -11,6 +11,7 @@ export class MusicService {
 
   constructor(private apiService: YoutubeApiService) {
     this.audio = new Audio();
+    this.audio.crossOrigin = 'anonymous';
   }
 
   get(url) {
@@ -22,9 +23,20 @@ export class MusicService {
     this.audio.load();
   }
 
-  play(url, options) {
+  play(url, options?) {
     this.load(url);
-    this.audio.play();
+    let playPromise = this.audio.play();
+    // In browsers that don’t yet support this functionality,
+    // playPromise won’t be defined.
+    if (playPromise !== undefined) {
+      playPromise.then(function(a) {
+        // Automatic playback started!
+      }).catch(function(error) {
+        // Automatic playback failed.
+        console.log(error);
+        // Show a UI element to let the user manually start playback.
+      });
+    }
   }
 
   getPlaylistTracks() {

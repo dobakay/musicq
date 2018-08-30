@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -7,12 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./card.component.scss']
 })
 export class CardComponent implements OnInit {
-
+  @Input() item;
+  @Output() songSelect = new EventEmitter<any>();
   clicked = false;
   hovered = false;
   constructor() { }
 
   ngOnInit() {
+    console.log(this.item);
   }
 
   selectCard() {
@@ -21,6 +23,10 @@ export class CardComponent implements OnInit {
 
   hoverCard() {
     this.hovered = !this.hovered;
+  }
+
+  playSong(e) {
+    this.songSelect.emit({songId:this.item.id.videoId});
   }
 
 }

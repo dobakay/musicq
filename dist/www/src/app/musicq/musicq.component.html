@@ -19,3 +19,9 @@
 
     <!-- </div>  -->
 </div>
+<div class="musicq-container">
+  <div class="card-container">
+    <card *ngFor="let item of searchMatches" (songSelect)="play($event)" [item]=item></card>
+  </div>
+
+</div>
