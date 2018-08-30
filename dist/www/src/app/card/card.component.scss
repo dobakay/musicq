@@ -14,8 +14,10 @@
             width: 200px;
             height: 200px;
 
-            filter: blur(1px);
-            transition: filter 1.5s;
+            filter: blur(0);
+            transform: scale(1.5);
+            transition: all 1.5s ease;
+            vertical-align: middle;
         }
     
         p.length-background {
@@ -42,7 +44,8 @@
 
     .thumb.hovered {
         img {
-            filter: blur(0);
+            transform: scale(1.8);
+            filter: blur(1px);
         }
     }
 
