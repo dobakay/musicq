@@ -73,7 +73,8 @@ export class YoutubeApiService {
     if(gapi.client) {
       let request = gapi.client.youtube.search.list({
         q: q || 'tha trickaz',
-        part: 'snippet'
+        part: 'snippet',
+        maxResults: 50
       });
     
       return new Promise((resolve, reject) => {
