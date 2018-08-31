@@ -5,7 +5,10 @@ import { ScriptsService } from '../external.scripts.service/external.scripts.ser
 import { ClientSecret } from './client.secret';
 import { resolve } from 'url';
 // const OAuth2 = google.auth.OAuth2;
-const SCOPE = 'https://www.googleapis.com/auth/youtube.readonly';
+const SCOPES = ['https://www.googleapis.com/auth/plus.me',
+                'https://www.googleapis.com/auth/youtube.readonly',
+                'https://www.googleapis.com/auth/youtube'
+              ];
 
 declare var gapi: any;
 
@@ -13,24 +16,16 @@ declare var gapi: any;
   providedIn: 'root'
 })
 export class YoutubeApiService {
-
+  private GoogleAuth;
+  private user;
   constructor(private http: Http, private externalScripts: ScriptsService, private clientCredential: ClientSecret) {
   }
 
-  init():Promise<any> {
-    return this.externalScripts.loadScript('GAPI')
-                .then((data) => {
-                  return this.getGapis();
-                })
-                .then(() => {
-                  return this.authorization();
-                })
-                .then(() => {
-                  return this.setClient();
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
+  async init():Promise<any> {
+    await this.externalScripts.loadScript('GAPI');
+    await this.getGapis();
+    await this.authorization();
+    await this.setClient();
   }
 
   getGapis() {
@@ -45,28 +40,19 @@ export class YoutubeApiService {
   * Authorize Google Compute Engine API.
   */
   authorization() {
-    let gapiKey = sessionStorage.getItem('gapiKey');
-    if(!!gapiKey) {
-      gapi.client.setToken(gapiKey);
-      return Promise.resolve();
-    } else {
-      return gapi.auth.authorize({
-        client_id: this.clientCredential.clientId,
-        scope: SCOPE,
-        immediate: false
-      }, (authResult) => {
-            if (authResult && !authResult.error) {
-              console.log(authResult);
-              sessionStorage.setItem('gapiKey', authResult.access_token);
-              // window.alert('Auth was successful!');
-              return Promise.resolve();
-            } else {
-              // window.alert('Auth was not successful');
-              console.log(authResult.error);
-              return Promise.reject(authResult.error);
-            }
+    return new Promise((resolve, reject) => {
+      gapi.client.init({
+        apiKey: this.clientCredential.apiToken,
+        clientId: this.clientCredential.clientId,
+        scope: SCOPES.join(' '),
+      }).then(()=> {
+        this.GoogleAuth = gapi.auth2.getAuthInstance();
+        this.GoogleAuth.signIn();
+        this.user = this.GoogleAuth.currentUser.get();
+        this.user.grant({scope: SCOPES.join(' ')});
+        return resolve();
       });
-    }
+    });
   }
 
   setClient() {
@@ -78,10 +64,12 @@ export class YoutubeApiService {
   }
 
   search(q?) {
-    if(gapi.client) {
+    if(!!gapi.client && !!gapi.client.youtube) {
       let request = gapi.client.youtube.search.list({
         q: q || 'tha trickaz',
         part: 'snippet',
+        type:'video',
+        forDevelopers: true,
         maxResults: 50
       });
     
@@ -91,5 +79,7 @@ export class YoutubeApiService {
         });
       });
     }
+    console.log(gapi.client);
+    return Promise.reject(new Error('no youtube client'));
   }
 }
