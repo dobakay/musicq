@@ -1,18 +1,18 @@
 <div
-  [id]="item.id.videoId"
+  [id]="item.id"
   class="thumb-container"
   (click)="playSong($this)" 
   (mouseover)="hoverCard()" (mouseout)="hoverCard()"
   [ngClass]="this.hovered? 'hovered' : '' ">
   <div class="thumb" [ngClass]="this.hovered? 'hovered' : '' ">
-    <img [src]="item.snippet.thumbnails.high.url" alt="">
+    <img [src]="item.thumbnail.thumbnails[3].url" alt="">
 
     <p class="length-background"></p>
-    <p class="length">4:20</p>
+    <p class="length">{{item.lengthText.simpleText}}</p>
     <div class="info-background"></div>
     <div class="info">
-        <p class="title">{{item.snippet.title}}</p>
-        <p class="artist">{{item.snippet.channelTitle}}</p>
+        <p class="title">{{item.title}}</p>
+        <p class="artist">tra</p>
     </div>
   </div>
 </div>

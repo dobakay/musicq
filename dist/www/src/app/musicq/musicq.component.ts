@@ -34,13 +34,8 @@ export class MusicqComponent implements OnInit {
     this.searchMatches = [];
     let match = from (this.youtube.searchHeadless(e._query));
     match
-      .pipe(
-        flatMap((data) => data['items']),
-        filter((item) => item['id'].kind === "youtube#video")
-      )
       .subscribe((res) => {
-        console.log(res);
-        this.searchMatches.push(res);
+        this.searchMatches = res;
       });
   }
 

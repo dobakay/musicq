@@ -85,7 +85,6 @@ gulp.task('build', ['clean:scripts', 'scripts']);
 gulp.task('server', () => {
     nodemon({
         'script': paths.server_entry_point,
-        // 'ignore': './dist/www/*.js'
     });
 });
 

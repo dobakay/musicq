@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from '../api/api.service';
 import { YoutubeApiService } from '../youtube-api/api.service';
 
 @Injectable({

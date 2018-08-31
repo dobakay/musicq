@@ -122,7 +122,7 @@ export class Server {
 		// Routes init
 		IndexRoute.create(router); // /
 		StreamTubeRoute.create(router); // /youtube-download/:videoID
-		SearchTubeRoute.create(router);	// /search-youtube/
+		SearchTubeRoute.create(router);	// /search-youtube/?query
 
 		//use router middleware
 		this.app.use(router);

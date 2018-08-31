@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/internal/Observable';
+import { map, filter, catchError, mergeMap, flatMap } from 'rxjs/operators';
 import { ScriptsService } from '../external.scripts.service/external.scripts.service';
 import { ClientSecret } from './client.secret';
 const SCOPES = ['https://www.googleapis.com/auth/plus.me',
@@ -83,6 +84,23 @@ export class YoutubeApiService {
   }
 
   async searchHeadless(q?) {
-    return this.http.get('http://localhost:8080/search-youtube/?' + q);
+    this.http.get('http://localhost:8080/search-youtube/?q=' + q)
+    .pipe(map(res => res.json()[1].response.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents),
+          flatMap((item) => item),
+        filter((item) => item.videoRenderer),
+        map(o => o.videoRenderer),
+        map((o) => {
+          return {
+            lengthText: o.lengthText,
+            title: o.title,
+            id: o.videoId,
+            thumbnail: o.thumbnail,
+            fullObject: o
+          }
+        }))
+    .subscribe((val) => {
+      console.log(val);
+      return new Observable();
+    })
   }
 }

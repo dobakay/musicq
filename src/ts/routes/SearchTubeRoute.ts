@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {BaseRoute} from "./BaseRoute";
+import * as puppeteer from 'puppeteer';
 
 /**
  * "/" route
@@ -47,7 +48,24 @@ export class SearchTubeRoute extends BaseRoute {
            this.title = "MusiqQ Home";
 
            //set options
-           console.log(req.query);
+           console.log(req.query.q);
+           this.search(req.query.q, res);
        }
+
+       async search(q:string, res:Response) {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto('https://youtube.com');
+        await page.type('#search', q);
+        await page.click('button#search-icon-legacy');
+        let json;
+        page.on('response', async (res) => {
+            json = await res.json();
+        });
+        await page.waitForSelector('ytd-thumbnail.ytd-video-renderer')
+        const videos = await page.$$('ytd-thumbnail.ytd-video-renderer');
+        await browser.close();
+        res.send(json);
+      }
 
 }
