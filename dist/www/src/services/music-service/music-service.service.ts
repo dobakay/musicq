@@ -15,7 +15,7 @@ export class MusicService {
   }
 
   get(url) {
-    return this.apiService.get(url);
+    // return this.apiService.get(url);
   }
 
   load(url) {
@@ -39,12 +39,12 @@ export class MusicService {
     }
   }
 
-  getPlaylistTracks() {
-    // Request for a playlist via Soundcloud using a client id
-    return this.apiService.get('https://api.soundcloud.com/playlists/209262931')
-      .map(res => res.json())
-      .map(data => data.tracks);
-  }
+  // getPlaylistTracks() {
+  //   // Request for a playlist via Soundcloud using a client id
+  //   return this.apiService.get('https://api.soundcloud.com/playlists/209262931')
+  //     .map(res => res.json())
+  //     .map(data => data.tracks);
+  // }
 
   randomTrack(tracks) {
     const trackLength = tracks.length;

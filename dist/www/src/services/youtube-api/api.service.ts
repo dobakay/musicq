@@ -35,7 +35,7 @@ export class YoutubeApiService {
 
   getGapis() {
     return new Promise((resolve, reject) => {
-      gapi.load('auth:client', () => {
+      gapi.load('auth2:client', () => {
         resolve();
       });
     });
@@ -45,12 +45,19 @@ export class YoutubeApiService {
   * Authorize Google Compute Engine API.
   */
   authorization() {
+    let gapiKey = sessionStorage.getItem('gapiKey');
+    if(!!gapiKey) {
+      gapi.client.setToken(gapiKey);
+      return Promise.resolve();
+    } else {
       return gapi.auth.authorize({
         client_id: this.clientCredential.clientId,
         scope: SCOPE,
         immediate: false
       }, (authResult) => {
             if (authResult && !authResult.error) {
+              console.log(authResult);
+              sessionStorage.setItem('gapiKey', authResult.access_token);
               // window.alert('Auth was successful!');
               return Promise.resolve();
             } else {
@@ -59,6 +66,7 @@ export class YoutubeApiService {
               return Promise.reject(authResult.error);
             }
       });
+    }
   }
 
   setClient() {
@@ -84,26 +92,4 @@ export class YoutubeApiService {
       });
     }
   }
-
-  prepareUrl(url) {
-    return `${url}`;
-  }
-
-  get(url) {
-    // Returns an obsrevable
-    // for the HTTP get request
-    return this.http.get(url);
-  }
-
-  authorize(credentials, callback) {
-    const clientSecret = credentials.installed.client_secret;
-    const clientId = credentials.installed.client_id;
-    const redirectUrl = credentials.installed.redirect_uris[0];
-    // const oauth2Client = new OAuth2(clientId, clientSecret, redirectUrl);
-  }
-
-  // public getJSON(): Observable<any> {
-  //   return this.http.get('../assets/client_secret_json.json')
-  //     .map((res: any) => res.json());
-  // }
 }
