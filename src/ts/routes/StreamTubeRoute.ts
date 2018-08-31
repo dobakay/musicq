@@ -11,28 +11,27 @@ var fs = require("fs");
  * "/youtube-download" route
  *
  */
-export class DownloadTubeRoute extends BaseRoute {
+export class StreamTubeRoute extends BaseRoute {
 
     /**
      * Create route
      *
-     * @class DownloadTubeRoute
+     * @class StreamTubeRoute
      * @method create
      * @param router {Router} The Express Router.
      * @static
      */
-    public static create(router: Router) {
-        console.log("[DownloadTubeRoute::create] Creating youtube download route.");
+    public static create(router: Router) { 
+        console.log("[StreamTubeRoute::create] Creating youtube download route.");
 
         router.get("/youtube-download/:videoID", (req: Request, res: Response, next: NextFunction) => {
-            new DownloadTubeRoute().download(req, res, next);
+            new StreamTubeRoute().download(req, res, next);
         });
     }
-
     /**
      * Constructor
      *
-     * @class DownloadTubeRoute
+     * @class StreamTubeRoute
      * @constructor
      */
     constructor() {
@@ -42,7 +41,7 @@ export class DownloadTubeRoute extends BaseRoute {
     /**
      * The tube download page route.
      *
-     * @class DownloadTubeRoute
+     * @class StreamTubeRoute
      * @method download
      * @param req {Request} The Express Request object.
      * @param res {Response} The Express Response object.

@@ -3,8 +3,6 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { ScriptsService } from '../external.scripts.service/external.scripts.service';
 import { ClientSecret } from './client.secret';
-import { resolve } from 'url';
-// const OAuth2 = google.auth.OAuth2;
 const SCOPES = ['https://www.googleapis.com/auth/plus.me',
                 'https://www.googleapis.com/auth/youtube.readonly',
                 'https://www.googleapis.com/auth/youtube'
@@ -22,10 +20,11 @@ export class YoutubeApiService {
   }
 
   async init():Promise<any> {
-    await this.externalScripts.loadScript('GAPI');
-    await this.getGapis();
-    await this.authorization();
-    await this.setClient();
+    // await this.externalScripts.loadScript('GAPI');
+    // await this.getGapis();
+    // await this.authorization();
+    // await this.setClient();
+    return Promise.resolve();
   }
 
   getGapis() {
@@ -81,5 +80,9 @@ export class YoutubeApiService {
     }
     console.log(gapi.client);
     return Promise.reject(new Error('no youtube client'));
+  }
+
+  async searchHeadless(q?) {
+    return this.http.get('http://localhost:8080/search-youtube/?' + q);
   }
 }

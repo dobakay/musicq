@@ -32,7 +32,7 @@ export class MusicqComponent implements OnInit {
 
   search(e) {
     this.searchMatches = [];
-    let match = from (this.youtube.search(e._query));
+    let match = from (this.youtube.searchHeadless(e._query));
     match
       .pipe(
         flatMap((data) => data['items']),

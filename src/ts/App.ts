@@ -12,8 +12,8 @@ import * as methodOverride from "method-override";
 
 // Routes
 import { IndexRoute } from "./routes/IndexRoute";
-import { DownloadTubeRoute } from "./routes/DownloadTubeRoute";
-// D: \Projects\MM\musicq\src\scripts\IndexRoute.ts
+import { StreamTubeRoute } from "./routes/StreamTubeRoute";
+import { SearchTubeRoute } from "./routes/SearchTubeRoute";
 
 export class Server {
 
@@ -121,7 +121,8 @@ export class Server {
 
 		// Routes init
 		IndexRoute.create(router); // /
-		DownloadTubeRoute.create(router); // /youtube-download/:videoID
+		StreamTubeRoute.create(router); // /youtube-download/:videoID
+		SearchTubeRoute.create(router);	// /search-youtube/
 
 		//use router middleware
 		this.app.use(router);

@@ -1,7 +1,7 @@
 
 {
     "server_entry_point": "dist/js/index.js",
-    "input": "src/**/*",
+    "input": "src",
     "output": "dist/",
     "clear": "dist/*",
     "html": {
