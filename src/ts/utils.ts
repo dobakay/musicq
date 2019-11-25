@@ -1,5 +1,5 @@
-var path = require('path');
-var fs = require('fs');
+var path = require("path");
+var fs = require("fs");
 
 export function fromDir(startPath: String, filter: RegExp, callback: Function) {
 
@@ -14,20 +14,21 @@ export function fromDir(startPath: String, filter: RegExp, callback: Function) {
         var stat = fs.lstatSync(filename);
         if (stat.isDirectory()) {
             fromDir(filename, filter, callback); //recurse
+        } else if (filter.test(filename)) {
+            callback(filename);
         }
-        else if (filter.test(filename)) callback(filename);
-    };
-};
+    }
+}
 
-export function getSubStringBetweenTwoStrings(inputText:string, startStr:string, endStr:string):string {
-    if(inputText.indexOf(startStr) && inputText.indexOf(endStr)) {
+export function getSubStringBetweenTwoStrings(inputText: string, startStr: string, endStr: string): string {
+    if (inputText.indexOf(startStr) && inputText.indexOf(endStr)) {
         let startIndex = inputText.indexOf(startStr) + startStr.length;
         let endIndex = inputText.indexOf(endStr);
         return inputText.substring(startIndex, endIndex);
     } else {
-        throw new Error('Start or End strings are not contained in text');
+        throw new Error("Start or End strings are not contained in text");
     }
-};
+}
 
 // fromDir('../LiteScript', /\.html$/, function (filename) {
 //     console.log('-- found: ', filename);

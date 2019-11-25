@@ -2,7 +2,6 @@
 import { Request, Response } from "express";
 /**
  * Constructor
- *
  * @class BaseRoute
  */
 export declare class BaseRoute {
@@ -10,14 +9,12 @@ export declare class BaseRoute {
     private scripts;
     /**
      * Constructor
-     *
      * @class BaseRoute
      * @constructor
      */
     constructor();
     /**
      * Add a JS external file to the request.
-     *
      * @class BaseRoute
      * @method addScript
      * @param src {string} The scr to the external JS file.
@@ -26,7 +23,6 @@ export declare class BaseRoute {
     addScript(src: string): BaseRoute;
     /**
      * Render a page.
-     *
      * @class BaseRoute
      * @method render
      * @param req {Request} The request object.

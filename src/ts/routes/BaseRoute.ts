@@ -2,7 +2,6 @@ import {NextFunction, Request, Response} from "express";
 
 /**
  * Constructor
- * 
  * @class BaseRoute
  */
 export class BaseRoute {
@@ -13,7 +12,6 @@ export class BaseRoute {
 
     /**
      * Constructor
-     * 
      * @class BaseRoute
      * @constructor
      */
@@ -24,7 +22,6 @@ export class BaseRoute {
 
     /**
      * Add a JS external file to the request.
-     * 
      * @class BaseRoute
      * @method addScript
      * @param src {string} The scr to the external JS file.
@@ -37,7 +34,6 @@ export class BaseRoute {
 
     /**
      * Render a page.
-     *
      * @class BaseRoute
      * @method render
      * @param req {Request} The request object.
