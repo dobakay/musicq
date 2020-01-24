@@ -47,6 +47,7 @@ function onError(error) {
             process.exit(1);
             break;
         default:
+            console.log(error);
             throw error;
     }
 }

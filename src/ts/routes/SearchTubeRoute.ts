@@ -48,24 +48,28 @@ export class SearchTubeRoute extends BaseRoute {
            this.title = "MusiqQ Home";
 
            //set options
-           console.log(req.query.q);
+        //    console.log(req.query.q);
            this.search(req.query.q, res);
        }
 
-       async search(q:string, res:Response) {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.goto('https://youtube.com');
-        await page.type('#search', q);
-        await page.click('button#search-icon-legacy');
-        let json;
-        page.on('response', async (res) => {
-            json = await res.json();
-        });
-        await page.waitForSelector('ytd-thumbnail.ytd-video-renderer')
-        const videos = await page.$$('ytd-thumbnail.ytd-video-renderer');
-        await browser.close();
-        res.send(json);
-      }
+       async search(q:string, response:Response) {
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            await page.goto('https://youtube.com');
+            await page.type('#search', q);
+            await page.click('button#search-icon-legacy');
+            let json;
+            page.on('response', async (res) => {
+                json = await res.json();
+                response.send(json);
+            });
+            page.on('error', async (er) => {
+                console.log(er);
+            });
 
+            // await page.waitForSelector('#page-manager ytd-thumbnail.ytd-video-renderer img.yt-img-shadow')
+            // const videos = await page.$$('#page-manager ytd-thumbnail.ytd-video-renderer img.yt-img-shadow');
+            // console.log(videos);
+            await browser.close();
+        }
 }

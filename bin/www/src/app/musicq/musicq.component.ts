@@ -17,7 +17,7 @@ export class MusicqComponent implements OnInit {
   duration;
   tracks: any[] = [];
   backgroundStyle;
-  searchMatches = [];
+  searchMatches: any[] = [];
 
   constructor(private musicService: MusicService, private youtube: YoutubeApiService) {}
 
@@ -32,10 +32,11 @@ export class MusicqComponent implements OnInit {
 
   search(e) {
     this.searchMatches = [];
-    let match = from (this.youtube.searchHeadless(e._query));
+    let match = from(this.youtube.searchHeadless(e._query));
     match
       .subscribe((res) => {
-        this.searchMatches = res;
+        console.log(res);
+        // this.searchMatches = res;
       });
   }
 

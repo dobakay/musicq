@@ -12,7 +12,7 @@
     // "outFiles": [
     //   "${workspaceRoot}/dist/js/**/*.js"
     // ],                       /* Concatenate and emit output to single file. */
-    "outDir": "dist/js/",                        /* Redirect output structure to the directory. */
+    "outDir": "bin/js/",                        /* Redirect output structure to the directory. */
     "rootDir": "src/ts/",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "removeComments": true,                /* Do not emit comments to output. */
     // "noEmit": true,                        /* Do not emit outputs. */
@@ -45,7 +45,7 @@
 
     /* Source Map Options */
     "sourceRoot": "",                    /* Specify the location where debugger should locate TypeScript files instead of source locations. */
-    "mapRoot": "dist/js/source_maps",    /* Specify the location where debugger should locate map files instead of generated locations. */
+    "mapRoot": "bin/js/source_maps",    /* Specify the location where debugger should locate map files instead of generated locations. */
     // "inlineSourceMap": true,               /* Emit a single file with source maps instead of having a separate file. */
     // "inlineSources": true,                 /* Emit the source alongside the sourcemaps within a single file; requires '--inlineSourceMap' or '--sourceMap' to be set. */
 

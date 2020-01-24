@@ -60,6 +60,7 @@ function onError(error: any) {
             process.exit(1);
             break;
         default:
+            console.log(error);
             throw error;
     }
 }

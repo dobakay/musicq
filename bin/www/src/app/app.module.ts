@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 // APIs Dependencies
 import { ScriptsService } from '../services/external.scripts.service/external.scripts.service';
@@ -32,7 +32,7 @@ import { SearchComponent } from './search/search.component';
   ],
   imports: [
     BrowserModule,
-    HttpModule
+    HttpClientModule
   ],
   providers: [
     LocalFileService,

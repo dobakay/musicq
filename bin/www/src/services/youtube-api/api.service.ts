@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, filter, catchError, mergeMap, flatMap } from 'rxjs/operators';
 import { ScriptsService } from '../external.scripts.service/external.scripts.service';
@@ -17,7 +17,7 @@ declare var gapi: any;
 export class YoutubeApiService {
   private GoogleAuth;
   private user;
-  constructor(private http: Http, private externalScripts: ScriptsService, private clientCredential: ClientSecret) {
+  constructor(private http: HttpClient, private externalScripts: ScriptsService, private clientCredential: ClientSecret) {
   }
 
   async init():Promise<any> {
@@ -83,24 +83,39 @@ export class YoutubeApiService {
     return Promise.reject(new Error('no youtube client'));
   }
 
+  async extractThumbnails(res) {
+    const data = await res[1];
+    return data.response.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
+  }
+
   async searchHeadless(q?) {
-    this.http.get('http://localhost:8080/search-youtube/?q=' + q)
-    .pipe(map(res => res.json()[1].response.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents),
-          flatMap((item) => item),
-        filter((item) => item.videoRenderer),
-        map(o => o.videoRenderer),
-        map((o) => {
-          return {
-            lengthText: o.lengthText,
-            title: o.title,
-            id: o.videoId,
-            thumbnail: o.thumbnail,
-            fullObject: o
-          }
-        }))
+    return this.http.get('http://localhost:8080/search-youtube/?q=' + q)
+    .pipe(map(this.extractThumbnails),
+        // flatMap((item) => item),
+        // filter((item) => item.videoRenderer),
+        // map(o => o.videoRenderer),
+        // map((o) => {
+        //   return {
+        //     lengthText: o.lengthText,
+        //     title: o.title,
+        //     id: o.videoId,
+        //     thumbnail: o.thumbnail,
+        //     fullObject: o
+        //   }
+        // })
+    )
     .subscribe((val) => {
       console.log(val);
       return new Observable();
     })
+        // map((o) => {
+        //   return {
+        //     lengthText: o.lengthText,
+        //     title: o.title,
+        //     id: o.videoId,
+        //     thumbnail: o.thumbnail,
+        //     fullObject: o
+        //   } 
+        // }))
   }
 }

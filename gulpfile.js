@@ -45,22 +45,6 @@ gulp.task('scripts', () => {
             }
         })).pipe(gulp.dest(paths.scripts.output))
     ]);
-
-    // return merge([  // Merge the two output streams, so this task is finished
-    //     // when the IO of both operations are done.
-    //     tsResult.dts.pipe(gulp.dest(paths.scripts.output_definitions)),
-    //     tsResult.js.pipe(sourcemaps.write({
-    //         mapSources: (path) => path, // This affects the "sources" attribute even if it is a no-op. I don't know why.
-    //         sourceRoot: (file) => {
-    //             return path.relative(file.relative, path.join(file.cwd, 'js/'));
-    //         }
-    //     }))
-    //         .pipe(gulp.dest(paths.scripts.output))
-    // ]);
-
-    // tsResult.dts.pipe(gulp.dest(paths.scripts.output_definitions));
-    // return tsResult.js.pipe(sourcemaps.write('.'))
-    //     .pipe(gulp.dest(paths.scripts.output));
 });
 
 cleanTask('clean:scripts', paths.scripts.clear);
@@ -82,8 +66,16 @@ gulp.task('build', gulp.series('clean:scripts', 'scripts'));
 
 gulp.task('server', () => {
     nodemon({
-        'script': paths.server_entry_point,
-    });
+        script: paths.server_entry_point,
+        tasks: ['build'],
+        ext: 'ts',
+        watch: [paths.scripts.input],
+    }).on(`restart`, () => {
+        console.log(`App restarted!`)
+    })
+    console.log(`App started!`)
+
+    
 });
 
 let serverStarted = false;
