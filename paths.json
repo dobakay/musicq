@@ -18,6 +18,7 @@
     "scripts": {
         "input": "src/ts/*",
         "output_definitions": "dist/js/definitions/",
+        "source_maps": "./source_maps/",
         "clear": "dist/js/*",
         "output": "dist/js/"
     },

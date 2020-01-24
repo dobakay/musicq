@@ -1,20 +1,20 @@
 'use strict';
 
-let exec = require('child_process').exec;
-let path = require("path");
-let gulp = require("gulp");
-let merge = require('merge2');
-let concat = require("gulp-concat");
-let clean = require('gulp-clean');
-let watch = require('gulp-watch');
-let recursiveFolder = require('gulp-recursive-folder');
+const exec = require('child_process').exec;
+const path = require("path");
+const gulp = require("gulp");
+const merge = require('merge2');
+const concat = require("gulp-concat");
+const clean = require('gulp-clean');
+const watch = require('gulp-watch');
+const recursiveFolder = require('gulp-recursive-folder');
 
-let ts = require("gulp-typescript");
-let sourcemaps = require('gulp-sourcemaps');
-let tsProject = ts.createProject("tsconfig.json");
-let nodemon = require('gulp-nodemon');
+const ts = require("gulp-typescript");
+const sourcemaps = require('gulp-sourcemaps');
+const tsProject = ts.createProject("tsconfig.json");
+const nodemon = require('gulp-nodemon');
 
-let paths = require("./paths.json");
+const paths = require("./paths.json");
 
 gulp.task('clean', () => {
     return gulp.src(paths.clear, { read: false })
@@ -31,19 +31,17 @@ function cleanTask(cleanTask, cleanPath) {
 gulp.task('scripts', () => {
     let tsResult = tsProject
         .src()
-        .pipe(sourcemaps.init())
+        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(tsProject());
 
     return merge([  // Merge the two output streams, so this task is finished
                     // when the IO of both operations are done.
         tsResult.dts.pipe(gulp.dest(paths.scripts.output_definitions)),
-        tsResult.js.pipe(sourcemaps.write({
-            // Return relative source map root directories per file.
+        tsResult.js.pipe(sourcemaps.write(paths.scripts.source_maps, {
+            includeContent:false,
             mapSources: (path) => path,
-            sourceRoot: function (file) {
-                // let sourceFile = path.join(`${__dirname}/dist/js/`, file.sourceMap.file);
-                // return path.relative(path.dirname(sourceFile), file.cwd);
-                return path.relative(file.relative, path.join(file.cwd, 'src'));
+            sourceRoot: (file) => {
+                path.relative(file.relative, path.join(file.cwd, 'src'))
             }
         })).pipe(gulp.dest(paths.scripts.output))
     ]);
@@ -80,7 +78,7 @@ gulp.task('youtube_dl-copy', () => {
 });
 
 // NOTE: order is essential
-gulp.task('build', ['clean:scripts', 'scripts']);
+gulp.task('build', gulp.series('clean:scripts', 'scripts'));
 
 gulp.task('server', () => {
     nodemon({
@@ -98,5 +96,5 @@ gulp.once('startServer', () => {
     gulp.start('serve');
 });
 
-gulp.task('serve', ['server']);
-gulp.task('default', ['server']);
+gulp.task('serve', gulp.series('server'));
+gulp.task('default', gulp.series('server'));
