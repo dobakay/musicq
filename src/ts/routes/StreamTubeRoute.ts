@@ -4,38 +4,29 @@ import { spawn, exec } from "child_process";
 import { fromDir, getSubStringBetweenTwoStrings } from "../utils";
 import { StringDecoder } from "string_decoder";
 import * as request from "request";
+import { injectable } from "tsyringe";
+
 var ytStream = require("youtube-audio-stream");
 var fs = require("fs");
 
 /**
- * "/youtube-download" route
+ * "/youtube-download/:videoID" route
  *
  */
+@injectable()
 export class StreamTubeRoute extends BaseRoute {
-
-    /**
-     * Create route
-     *
-     * @class StreamTubeRoute
-     * @method create
-     * @param router {Router} The Express Router.
-     * @static
-     */
-    public static create(router: Router) { 
-        console.log("[StreamTubeRoute::create] Creating youtube download route.");
-
-        router.get("/youtube-download/:videoID", (req: Request, res: Response, next: NextFunction) => {
-            new StreamTubeRoute().download(req, res, next);
-        });
-    }
     /**
      * Constructor
      *
      * @class StreamTubeRoute
      * @constructor
      */
-    constructor() {
-        super();
+    // tslint:disable-next-line:typedef
+    constructor(path = "/youtube-download/:videoID", router: Router) {
+        super(path, router);
+        this.router.get(this.path, (req: Request, res: Response, next: NextFunction) => {
+            this.download(req, res, next);
+        });
     }
 
     /**

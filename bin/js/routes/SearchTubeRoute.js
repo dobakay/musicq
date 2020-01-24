@@ -9,6 +9,15 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -45,38 +54,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
 var BaseRoute_1 = require("./BaseRoute");
 var puppeteer = require("puppeteer");
+var tsyringe_1 = require("tsyringe");
 /**
- * "/" route
+ * "/search-youtube/?query" route
  *
  * @class SearchTubeRoute
  */
 var SearchTubeRoute = /** @class */ (function (_super) {
     __extends(SearchTubeRoute, _super);
     /**
-     * Constructor
-     *
-     * @class SearchTubeRoute
-     * @constructor
-     */
-    function SearchTubeRoute() {
-        return _super.call(this) || this;
-    }
-    /**
-     * Create the routes.
-     *
-     * @class SearchTubeRoute
-     * @method create
-     * @param router {Router} The Express Router.
-     * @static
-     */
-    SearchTubeRoute.create = function (router) {
-        console.log("[SearchTubeRoute::create] Creating index route.");
-        router.get("/search-youtube/", function (req, res, next) {
-            new SearchTubeRoute().index(req, res, next);
+      * Constructor
+      *
+      * @class SearchTubeRoute
+      * @constructor
+      */
+    // tslint:disable-next-line:typedef
+    function SearchTubeRoute(path, router) {
+        if (path === void 0) { path = "/search-youtube/"; }
+        var _this = _super.call(this, path, router) || this;
+        _this.router.get(_this.path, function (req, res, next) {
+            _this.index(req, res, next);
         });
-    };
+        puppeteer.launch().then(function (br) {
+            _this.browser = br;
+        });
+        return _this;
+    }
     /**
      * The home page route.
      *
@@ -90,55 +96,59 @@ var SearchTubeRoute = /** @class */ (function (_super) {
         // set custom title
         this.title = "MusiqQ Home";
         //set options
-        console.log(req.query.q);
+        //    console.log(req.query.q);
         this.search(req.query.q, res);
     };
-    SearchTubeRoute.prototype.search = function (q, res) {
+    SearchTubeRoute.prototype.search = function (q, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, json, videos;
+            var page, json;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, puppeteer.launch()];
+                    case 0: return [4 /*yield*/, this.browser.newPage()];
                     case 1:
-                        browser = _a.sent();
-                        return [4 /*yield*/, browser.newPage()];
-                    case 2:
                         page = _a.sent();
-                        return [4 /*yield*/, page.goto('https://youtube.com')];
-                    case 3:
-                        _a.sent();
-                        return [4 /*yield*/, page.type('#search', q)];
-                    case 4:
-                        _a.sent();
-                        return [4 /*yield*/, page.click('button#search-icon-legacy')];
-                    case 5:
-                        _a.sent();
-                        page.on('response', function (res) { return __awaiter(_this, void 0, void 0, function () {
+                        page.on("response", function (res) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, res.json()];
                                     case 1:
                                         json = _a.sent();
+                                        response.send(json);
                                         return [2 /*return*/];
                                 }
                             });
                         }); });
-                        return [4 /*yield*/, page.waitForSelector('ytd-thumbnail.ytd-video-renderer')];
-                    case 6:
+                        page.on("error", function (er) {
+                            console.log(er);
+                        });
+                        page.on("close", function (e) {
+                            response.send({
+                                serverEvent: JSON.stringify(e),
+                                msg: "search page was closed"
+                            });
+                        });
+                        return [4 /*yield*/, page.goto("https://youtube.com")];
+                    case 2:
                         _a.sent();
-                        return [4 /*yield*/, page.$$('ytd-thumbnail.ytd-video-renderer')];
-                    case 7:
-                        videos = _a.sent();
-                        return [4 /*yield*/, browser.close()];
-                    case 8:
+                        return [4 /*yield*/, page.type("#search", q)];
+                    case 3:
                         _a.sent();
-                        res.send(json);
+                        return [4 /*yield*/, page.click("button#search-icon-legacy")];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, page.close];
+                    case 5:
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
+    SearchTubeRoute = __decorate([
+        tsyringe_1.injectable(),
+        __metadata("design:paramtypes", [Object, Function])
+    ], SearchTubeRoute);
     return SearchTubeRoute;
 }(BaseRoute_1.BaseRoute));
 exports.SearchTubeRoute = SearchTubeRoute;

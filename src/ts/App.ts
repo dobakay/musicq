@@ -10,13 +10,20 @@ var errorHandler = require("errorhandler");
 import * as methodOverride from "method-override";
 // import methodOverride = require("method-override");
 
+// injector and references
+import "reflect-metadata";
+import { container } from "tsyringe";
+
 // Routes
 import { IndexRoute } from "./routes/IndexRoute";
 import { StreamTubeRoute } from "./routes/StreamTubeRoute";
 import { SearchTubeRoute } from "./routes/SearchTubeRoute";
+import { RootService } from "./services/RootService";
+import { BaseRoute } from "./routes/BaseRoute";
 
 export class Server {
 
+	private servicesDepencyTree: any;
 	public app: express.Application;
 
 	/**
@@ -41,6 +48,9 @@ export class Server {
 		// create expressjs application
 		this.app = express();
 
+		//create service dependency tree
+		this.resolveDependencies();
+
 		// configure application
 		this.config();
 
@@ -49,6 +59,16 @@ export class Server {
 
 		// add api
 		this.api();
+	}
+
+	/**
+	 * Resolve Service dependencies
+	 *
+	 * @class Server
+	 * @method resolveDependencies
+	 */
+	resolveDependencies() {
+		this.servicesDepencyTree = container.resolve(RootService);
 	}
 
 	/**
@@ -118,13 +138,17 @@ export class Server {
 	public routes() {
 		let router: express.Router;
 		router = express.Router();
+		let routes: BaseRoute[] = [];
 
 		// Routes init
-		IndexRoute.create(router); // /
-		StreamTubeRoute.create(router); // /youtube-download/:videoID
-		SearchTubeRoute.create(router);	// /search-youtube/?query
+
+		// TODO: iterate over routes and inject services to Routes(Controllers)
+		routes.push(container.resolve(IndexRoute)); // /
+		routes.push(container.resolve(StreamTubeRoute));
+		routes.push(container.resolve(SearchTubeRoute));
 
 		//use router middleware
+		// registering the routes in the Express app
 		this.app.use(router);
 	}
 }

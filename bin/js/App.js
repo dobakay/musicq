@@ -10,10 +10,14 @@ var cors = require("cors");
 var errorHandler = require("errorhandler");
 var methodOverride = require("method-override");
 // import methodOverride = require("method-override");
+// injector and references
+require("reflect-metadata");
+var tsyringe_1 = require("tsyringe");
 // Routes
 var IndexRoute_1 = require("./routes/IndexRoute");
 var StreamTubeRoute_1 = require("./routes/StreamTubeRoute");
 var SearchTubeRoute_1 = require("./routes/SearchTubeRoute");
+var RootService_1 = require("./services/RootService");
 var Server = /** @class */ (function () {
     /**
     * Constructor
@@ -24,6 +28,8 @@ var Server = /** @class */ (function () {
     function Server() {
         // create expressjs application
         this.app = express();
+        //create service dependency tree
+        this.resolveDependencies();
         // configure application
         this.config();
         // add routes
@@ -41,6 +47,15 @@ var Server = /** @class */ (function () {
      */
     Server.bootstrap = function () {
         return new Server();
+    };
+    /**
+     * Resolve Service dependencies
+     *
+     * @class Server
+     * @method resolveDependencies
+     */
+    Server.prototype.resolveDependencies = function () {
+        this.servicesDepencyTree = tsyringe_1.container.resolve(RootService_1.RootService);
     };
     /**
      * Create REST API routes
@@ -96,11 +111,14 @@ var Server = /** @class */ (function () {
     Server.prototype.routes = function () {
         var router;
         router = express.Router();
+        var routes = [];
         // Routes init
-        IndexRoute_1.IndexRoute.create(router); // /
-        StreamTubeRoute_1.StreamTubeRoute.create(router); // /youtube-download/:videoID
-        SearchTubeRoute_1.SearchTubeRoute.create(router); // /search-youtube/?query
+        // TODO: iterate over routes and inject services to Routes(Controllers)
+        routes.push(tsyringe_1.container.resolve(IndexRoute_1.IndexRoute)); // /
+        routes.push(tsyringe_1.container.resolve(StreamTubeRoute_1.StreamTubeRoute));
+        routes.push(tsyringe_1.container.resolve(SearchTubeRoute_1.SearchTubeRoute));
         //use router middleware
+        // registering the routes in the Express app
         this.app.use(router);
     };
     return Server;

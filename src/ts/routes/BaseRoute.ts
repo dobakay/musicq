@@ -1,30 +1,37 @@
 import {NextFunction, Request, Response} from "express";
+import {Router} from "express";
+import { injectable } from "tsyringe";
 
 /**
  * Constructor
- * 
+ *
  * @class BaseRoute
  */
+@injectable()
 export class BaseRoute {
 
     protected title: string;
+    protected path: string;
+    protected router: Router;
 
     private scripts: string[];
 
     /**
      * Constructor
-     * 
+     *
      * @class BaseRoute
      * @constructor
      */
-    constructor() {
+    constructor(path: string, router: Router) {
         this.title = "Doba's MusicQ proj";
         this.scripts = [];
+        this.path = path;
+        this.router = router;
     }
 
     /**
      * Add a JS external file to the request.
-     * 
+     *
      * @class BaseRoute
      * @method addScript
      * @param src {string} The scr to the external JS file.

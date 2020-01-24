@@ -7,21 +7,12 @@ import { BaseRoute } from "./BaseRoute";
  */
 export declare class IndexRoute extends BaseRoute {
     /**
-     * Create the routes.
-     *
-     * @class IndexRoute
-     * @method create
-     * @param router {Router} The Express Router.
-     * @static
-     */
-    static create(router: Router): void;
-    /**
      * Constructor
      *
      * @class IndexRoute
      * @constructor
      */
-    constructor();
+    constructor(path: string | undefined, router: Router);
     /**
      * The home page route.
      *

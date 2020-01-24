@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Router } from "express";
 /**
  * Constructor
  *
@@ -6,6 +7,8 @@ import { Request, Response } from "express";
  */
 export declare class BaseRoute {
     protected title: string;
+    protected path: string;
+    protected router: Router;
     private scripts;
     /**
      * Constructor
@@ -13,7 +16,7 @@ export declare class BaseRoute {
      * @class BaseRoute
      * @constructor
      */
-    constructor();
+    constructor(path: string, router: Router);
     /**
      * Add a JS external file to the request.
      *

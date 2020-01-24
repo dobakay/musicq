@@ -1,27 +1,19 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "./BaseRoute";
 /**
- * "/" route
+ * "/search-youtube/?query" route
  *
  * @class SearchTubeRoute
  */
 export declare class SearchTubeRoute extends BaseRoute {
+    browser: any;
     /**
-     * Create the routes.
-     *
-     * @class SearchTubeRoute
-     * @method create
-     * @param router {Router} The Express Router.
-     * @static
-     */
-    static create(router: Router): void;
-    /**
-     * Constructor
-     *
-     * @class SearchTubeRoute
-     * @constructor
-     */
-    constructor();
+      * Constructor
+      *
+      * @class SearchTubeRoute
+      * @constructor
+      */
+    constructor(path: string | undefined, router: Router);
     /**
      * The home page route.
      *
@@ -32,5 +24,5 @@ export declare class SearchTubeRoute extends BaseRoute {
      * @param next {NextFunction} Execute the next method.
      */
     index(req: Request, res: Response, next: NextFunction): void;
-    search(q: string, res: Response): Promise<void>;
+    search(q: string, response: Response): Promise<void>;
 }

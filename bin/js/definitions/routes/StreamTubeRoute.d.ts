@@ -1,26 +1,17 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "./BaseRoute";
 /**
- * "/youtube-download" route
+ * "/youtube-download/:videoID" route
  *
  */
 export declare class StreamTubeRoute extends BaseRoute {
-    /**
-     * Create route
-     *
-     * @class StreamTubeRoute
-     * @method create
-     * @param router {Router} The Express Router.
-     * @static
-     */
-    static create(router: Router): void;
     /**
      * Constructor
      *
      * @class StreamTubeRoute
      * @constructor
      */
-    constructor();
+    constructor(path: string | undefined, router: Router);
     /**
      * The tube download page route.
      *

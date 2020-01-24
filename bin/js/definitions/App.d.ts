@@ -1,5 +1,7 @@
 import * as express from "express";
+import "reflect-metadata";
 export declare class Server {
+    private servicesDepencyTree;
     app: express.Application;
     /**
      * Bootstrap the application.
@@ -17,6 +19,13 @@ export declare class Server {
     * @constructor
     */
     constructor();
+    /**
+     * Resolve Service dependencies
+     *
+     * @class Server
+     * @method resolveDependencies
+     */
+    resolveDependencies(): void;
     /**
      * Create REST API routes
      *

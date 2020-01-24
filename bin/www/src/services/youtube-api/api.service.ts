@@ -20,7 +20,7 @@ export class YoutubeApiService {
   constructor(private http: HttpClient, private externalScripts: ScriptsService, private clientCredential: ClientSecret) {
   }
 
-  async init():Promise<any> {
+  async init(): Promise<any> {
     // await this.externalScripts.loadScript('GAPI');
     // await this.getGapis();
     // await this.authorization();
@@ -45,7 +45,7 @@ export class YoutubeApiService {
         apiKey: this.clientCredential.apiToken,
         clientId: this.clientCredential.clientId,
         scope: SCOPES.join(' '),
-      }).then(()=> {
+      }).then(() => {
         this.GoogleAuth = gapi.auth2.getAuthInstance();
         this.GoogleAuth.signIn();
         this.user = this.GoogleAuth.currentUser.get();
@@ -64,15 +64,15 @@ export class YoutubeApiService {
   }
 
   search(q?) {
-    if(!!gapi.client && !!gapi.client.youtube) {
-      let request = gapi.client.youtube.search.list({
+    if (!!gapi.client && !!gapi.client.youtube) {
+      const request = gapi.client.youtube.search.list({
         q: q || 'tha trickaz',
         part: 'snippet',
-        type:'video',
+        type: 'video',
         forDevelopers: true,
         maxResults: 50
       });
-    
+
       return new Promise((resolve, reject) => {
         request.execute((response) => {
           resolve(response);
@@ -85,15 +85,34 @@ export class YoutubeApiService {
 
   async extractThumbnails(res) {
     const data = await res[1];
+    // tslint:disable-next-line:max-line-length
     return data.response.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
   }
 
   async searchHeadless(q?) {
-    return this.http.get('http://localhost:8080/search-youtube/?q=' + q)
-    .pipe(map(this.extractThumbnails),
-        // flatMap((item) => item),
-        // filter((item) => item.videoRenderer),
-        // map(o => o.videoRenderer),
+    try {
+      return this.http.get('http://localhost:8080/search-youtube/?q=' + q)
+        .pipe(map(this.extractThumbnails),
+          flatMap((item) => item),
+          filter((item) => item.videoRenderer),
+          map(o => o.videoRenderer),
+          map((o) => {
+            return {
+              lengthText: o.lengthText,
+              title: o.title,
+              id: o.videoId,
+              thumbnail: o.thumbnail,
+              fullObject: o
+            };
+          })
+        )
+        .subscribe((val) => {
+          console.log(val);
+          return new Observable();
+        });
+    } catch (error) {
+      console.log(error);
+    }
         // map((o) => {
         //   return {
         //     lengthText: o.lengthText,
@@ -102,20 +121,6 @@ export class YoutubeApiService {
         //     thumbnail: o.thumbnail,
         //     fullObject: o
         //   }
-        // })
-    )
-    .subscribe((val) => {
-      console.log(val);
-      return new Observable();
-    })
-        // map((o) => {
-        //   return {
-        //     lengthText: o.lengthText,
-        //     title: o.title,
-        //     id: o.videoId,
-        //     thumbnail: o.thumbnail,
-        //     fullObject: o
-        //   } 
         // }))
   }
 }

@@ -1,37 +1,32 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {BaseRoute} from "./BaseRoute";
-import * as puppeteer from 'puppeteer';
+import * as puppeteer from "puppeteer";
+import { injectable } from "tsyringe";
 
 /**
- * "/" route
+ * "/search-youtube/?query" route
  *
  * @class SearchTubeRoute
  */
+@injectable()
 export class SearchTubeRoute extends BaseRoute {
+    browser: any;
     /**
-     * Create the routes.
-     *
-     * @class SearchTubeRoute
-     * @method create
-     * @param router {Router} The Express Router.
-     * @static
-     */
-     public static create(router: Router) {
-         console.log("[SearchTubeRoute::create] Creating index route.");
-
-         router.get("/search-youtube/", (req: Request, res: Response, next: NextFunction) => {
-             new SearchTubeRoute().index(req, res, next);
-         });
-     }
-
-     /**
       * Constructor
       *
       * @class SearchTubeRoute
       * @constructor
       */
-      constructor() {
-          super();
+    // tslint:disable-next-line:typedef
+    constructor(path = "/search-youtube/", router: Router) {
+          super(path, router);
+          this.router.get(this.path, (req: Request, res: Response, next: NextFunction) => {
+              this.index(req, res, next);
+          });
+
+          puppeteer.launch().then((br) => {
+              this.browser = br;
+          });
       }
 
       /**
@@ -52,24 +47,25 @@ export class SearchTubeRoute extends BaseRoute {
            this.search(req.query.q, res);
        }
 
-       async search(q:string, response:Response) {
-            const browser = await puppeteer.launch();
-            const page = await browser.newPage();
-            await page.goto('https://youtube.com');
-            await page.type('#search', q);
-            await page.click('button#search-icon-legacy');
+       async search(q: string, response: Response) {
+            const page = await this.browser.newPage();
             let json;
-            page.on('response', async (res) => {
+            page.on("response", async (res: Response) => {
                 json = await res.json();
                 response.send(json);
             });
-            page.on('error', async (er) => {
+            page.on("error", (er: Error) => {
                 console.log(er);
             });
-
-            // await page.waitForSelector('#page-manager ytd-thumbnail.ytd-video-renderer img.yt-img-shadow')
-            // const videos = await page.$$('#page-manager ytd-thumbnail.ytd-video-renderer img.yt-img-shadow');
-            // console.log(videos);
-            await browser.close();
+            page.on("close", (e: Event) => {
+                response.send({
+                    serverEvent: JSON.stringify(e),
+                    msg: "search page was closed"
+                });
+            });
+            await page.goto("https://youtube.com");
+            await page.type("#search", q);
+            await page.click("button#search-icon-legacy");
+            await page.close;
         }
 }
