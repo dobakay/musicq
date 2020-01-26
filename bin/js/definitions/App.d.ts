@@ -1,5 +1,6 @@
 import * as express from "express";
 import "reflect-metadata";
+import "reflect-metadata";
 export declare class Server {
     private servicesDepencyTree;
     app: express.Application;
@@ -23,9 +24,9 @@ export declare class Server {
      * Resolve Service dependencies
      *
      * @class Server
-     * @method resolveDependencies
+     * @method resolveServiceDependencies
      */
-    resolveDependencies(): void;
+    resolveServiceDependencies(): void;
     /**
      * Create REST API routes
      *

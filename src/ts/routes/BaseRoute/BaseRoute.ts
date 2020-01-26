@@ -1,14 +1,15 @@
 import {NextFunction, Request, Response} from "express";
 import {Router} from "express";
-import { injectable } from "tsyringe";
+import { autoInjectable, inject } from "tsyringe";
+import { IBaseRoute } from "./IBaseRoute";
 
 /**
  * Constructor
  *
  * @class BaseRoute
  */
-@injectable()
-export class BaseRoute {
+@autoInjectable()
+export class BaseRoute implements IBaseRoute {
 
     protected title: string;
     protected path: string;
@@ -22,10 +23,10 @@ export class BaseRoute {
      * @class BaseRoute
      * @constructor
      */
-    constructor(path: string, router: Router) {
+    constructor(@inject("Router") router: Router) {
         this.title = "Doba's MusicQ proj";
+        this.path = "";
         this.scripts = [];
-        this.path = path;
         this.router = router;
     }
 

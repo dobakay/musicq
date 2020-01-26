@@ -1,14 +1,15 @@
 import {NextFunction, Request, Response, Router} from "express";
-import {BaseRoute} from "./BaseRoute";
-import { injectable } from "tsyringe";
-
+import {BaseRoute} from "../BaseRoute/BaseRoute";
+import { inject, injectable } from "tsyringe";
+import { IIndexRoute } from "./IIndexRoute";
 /**
  * "/" route
  *
  * @class IndexRoute
  */
 @injectable()
-export class IndexRoute extends BaseRoute {
+export class IndexRoute extends BaseRoute implements IIndexRoute{
+    protected path: string;
      /**
       * Constructor
       *
@@ -16,8 +17,9 @@ export class IndexRoute extends BaseRoute {
       * @constructor
       */
     // tslint:disable-next-line:typedef
-    constructor(path = "/", router: Router) {
-        super(path, router);
+    constructor(@inject("Router") router: Router) {
+        super(router);
+        this.path = "/";
         this.router.get(this.path, (req: Request, res: Response, next: NextFunction) => {
             this.index(req, res, next);
         });

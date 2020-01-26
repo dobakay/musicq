@@ -5,13 +5,14 @@ import { BaseRoute } from "./BaseRoute";
  *
  */
 export declare class StreamTubeRoute extends BaseRoute {
+    protected path: string;
     /**
      * Constructor
      *
      * @class StreamTubeRoute
      * @constructor
      */
-    constructor(path: string | undefined, router: Router);
+    constructor(router: Router);
     /**
      * The tube download page route.
      *

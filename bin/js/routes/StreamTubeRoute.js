@@ -40,9 +40,9 @@ var StreamTubeRoute = /** @class */ (function (_super) {
      * @constructor
      */
     // tslint:disable-next-line:typedef
-    function StreamTubeRoute(path, router) {
-        if (path === void 0) { path = "/youtube-download/:videoID"; }
-        var _this = _super.call(this, path, router) || this;
+    function StreamTubeRoute(router) {
+        var _this = _super.call(this, router) || this;
+        _this.path = "/youtube-download/:videoID";
         _this.router.get(_this.path, function (req, res, next) {
             _this.download(req, res, next);
         });
@@ -99,8 +99,8 @@ var StreamTubeRoute = /** @class */ (function (_super) {
         });
     };
     StreamTubeRoute = __decorate([
-        tsyringe_1.injectable(),
-        __metadata("design:paramtypes", [Object, Function])
+        tsyringe_1.autoInjectable(),
+        __metadata("design:paramtypes", [Function])
     ], StreamTubeRoute);
     return StreamTubeRoute;
 }(BaseRoute_1.BaseRoute));

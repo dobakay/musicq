@@ -16,7 +16,7 @@ export declare class BaseRoute {
      * @class BaseRoute
      * @constructor
      */
-    constructor(path: string, router: Router);
+    constructor(router: Router);
     /**
      * Add a JS external file to the request.
      *

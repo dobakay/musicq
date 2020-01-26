@@ -72,10 +72,10 @@ var SearchTubeRoute = /** @class */ (function (_super) {
       * @constructor
       */
     // tslint:disable-next-line:typedef
-    function SearchTubeRoute(path, router) {
-        if (path === void 0) { path = "/search-youtube/"; }
-        var _this = _super.call(this, path, router) || this;
-        _this.router.get(_this.path, function (req, res, next) {
+    function SearchTubeRoute(router) {
+        var _this = _super.call(this, router) || this;
+        _this.path = "/search-youtube/";
+        _this.router.get(_this.path.toString(), function (req, res, next) {
             _this.index(req, res, next);
         });
         puppeteer.launch().then(function (br) {
@@ -146,8 +146,8 @@ var SearchTubeRoute = /** @class */ (function (_super) {
         });
     };
     SearchTubeRoute = __decorate([
-        tsyringe_1.injectable(),
-        __metadata("design:paramtypes", [Object, Function])
+        tsyringe_1.autoInjectable(),
+        __metadata("design:paramtypes", [Function])
     ], SearchTubeRoute);
     return SearchTubeRoute;
 }(BaseRoute_1.BaseRoute));

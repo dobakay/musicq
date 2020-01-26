@@ -23,10 +23,10 @@ var BaseRoute = /** @class */ (function () {
      * @class BaseRoute
      * @constructor
      */
-    function BaseRoute(path, router) {
+    function BaseRoute(router) {
         this.title = "Doba's MusicQ proj";
+        this.path = "";
         this.scripts = [];
-        this.path = path;
         this.router = router;
     }
     /**
@@ -67,8 +67,8 @@ var BaseRoute = /** @class */ (function () {
         // });
     };
     BaseRoute = __decorate([
-        tsyringe_1.injectable(),
-        __metadata("design:paramtypes", [String, Function])
+        tsyringe_1.autoInjectable(),
+        __metadata("design:paramtypes", [Function])
     ], BaseRoute);
     return BaseRoute;
 }());

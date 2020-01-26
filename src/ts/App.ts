@@ -3,6 +3,7 @@ import * as cookieParser from "cookie-parser";
 import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
+import "reflect-metadata";
 var cors = require("cors");
 
 // import * as errorHandler from "errorHandler";
@@ -15,11 +16,11 @@ import "reflect-metadata";
 import { container } from "tsyringe";
 
 // Routes
-import { IndexRoute } from "./routes/IndexRoute";
-import { StreamTubeRoute } from "./routes/StreamTubeRoute";
-import { SearchTubeRoute } from "./routes/SearchTubeRoute";
+import { IndexRoute } from "./routes/IndexRoute/IndexRoute";
+import { StreamTubeRoute } from "./routes/StreamTubeRoute/StreamTubeRoute";
+import { SearchTubeRoute } from "./routes/SearchTubeRoute/SearchTubeRoute";
 import { RootService } from "./services/RootService";
-import { BaseRoute } from "./routes/BaseRoute";
+import { BaseRoute } from "./routes/BaseRoute/BaseRoute";
 
 export class Server {
 
@@ -48,9 +49,6 @@ export class Server {
 		// create expressjs application
 		this.app = express();
 
-		//create service dependency tree
-		this.resolveDependencies();
-
 		// configure application
 		this.config();
 
@@ -65,9 +63,9 @@ export class Server {
 	 * Resolve Service dependencies
 	 *
 	 * @class Server
-	 * @method resolveDependencies
+	 * @method resolveServiceDependencies
 	 */
-	resolveDependencies() {
+	resolveServiceDependencies() {
 		this.servicesDepencyTree = container.resolve(RootService);
 	}
 
@@ -90,7 +88,8 @@ export class Server {
 	public config() {
 
 		// add static paths
-		this.app.use("/static", express.static(path.join(__dirname, "../www")));
+		// NOTE: Not Needed for now
+		// this.app.use("/static", express.static(path.join(__dirname, "../www")));
 
 		// NOTE: NOT NEEDED for now
 		// configure pug template engine
@@ -125,7 +124,6 @@ export class Server {
 
 		//error handling
 		this.app.use(errorHandler());
-
 	}
 
 	/**
@@ -137,10 +135,14 @@ export class Server {
    */
 	public routes() {
 		let router: express.Router;
+		let Router = express.Router;
 		router = express.Router();
 		let routes: BaseRoute[] = [];
 
 		// Routes init
+		container.register("Router", {
+			useClass: RouterService(router)
+		});
 
 		// TODO: iterate over routes and inject services to Routes(Controllers)
 		routes.push(container.resolve(IndexRoute)); // /

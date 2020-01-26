@@ -6,13 +6,14 @@ import { BaseRoute } from "./BaseRoute";
  * @class IndexRoute
  */
 export declare class IndexRoute extends BaseRoute {
+    protected path: string;
     /**
      * Constructor
      *
      * @class IndexRoute
      * @constructor
      */
-    constructor(path: string | undefined, router: Router);
+    constructor(router: Router);
     /**
      * The home page route.
      *

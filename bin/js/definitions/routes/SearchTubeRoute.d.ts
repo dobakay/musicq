@@ -7,13 +7,14 @@ import { BaseRoute } from "./BaseRoute";
  */
 export declare class SearchTubeRoute extends BaseRoute {
     browser: any;
+    path: string;
     /**
       * Constructor
       *
       * @class SearchTubeRoute
       * @constructor
       */
-    constructor(path: string | undefined, router: Router);
+    constructor(router: Router);
     /**
      * The home page route.
      *

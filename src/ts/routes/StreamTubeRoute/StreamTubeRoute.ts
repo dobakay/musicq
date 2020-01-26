@@ -1,10 +1,9 @@
 import {NextFunction, Request, Response, Router} from "express";
-import {BaseRoute} from "./BaseRoute";
+import {BaseRoute} from "../BaseRoute/BaseRoute";
 import { spawn, exec } from "child_process";
-import { fromDir, getSubStringBetweenTwoStrings } from "../utils";
+import { fromDir, getSubStringBetweenTwoStrings } from "../../utils";
 import { StringDecoder } from "string_decoder";
-import * as request from "request";
-import { injectable } from "tsyringe";
+import { autoInjectable } from "tsyringe";
 
 var ytStream = require("youtube-audio-stream");
 var fs = require("fs");
@@ -13,8 +12,9 @@ var fs = require("fs");
  * "/youtube-download/:videoID" route
  *
  */
-@injectable()
+@autoInjectable()
 export class StreamTubeRoute extends BaseRoute {
+    protected path: string;
     /**
      * Constructor
      *
@@ -22,8 +22,9 @@ export class StreamTubeRoute extends BaseRoute {
      * @constructor
      */
     // tslint:disable-next-line:typedef
-    constructor(path = "/youtube-download/:videoID", router: Router) {
-        super(path, router);
+    constructor(router: Router) {
+        super(router);
+        this.path = "/youtube-download/:videoID";
         this.router.get(this.path, (req: Request, res: Response, next: NextFunction) => {
             this.download(req, res, next);
         });

@@ -36,9 +36,9 @@ var IndexRoute = /** @class */ (function (_super) {
      * @constructor
      */
     // tslint:disable-next-line:typedef
-    function IndexRoute(path, router) {
-        if (path === void 0) { path = "/"; }
-        var _this = _super.call(this, path, router) || this;
+    function IndexRoute(router) {
+        var _this = _super.call(this, router) || this;
+        _this.path = "/";
         _this.router.get(_this.path, function (req, res, next) {
             _this.index(req, res, next);
         });
@@ -63,8 +63,8 @@ var IndexRoute = /** @class */ (function (_super) {
         res.sendfile("./dist/www/dist/index.html");
     };
     IndexRoute = __decorate([
-        tsyringe_1.injectable(),
-        __metadata("design:paramtypes", [Object, Function])
+        tsyringe_1.autoInjectable(),
+        __metadata("design:paramtypes", [Function])
     ], IndexRoute);
     return IndexRoute;
 }(BaseRoute_1.BaseRoute));
