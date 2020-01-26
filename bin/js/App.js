@@ -4,7 +4,7 @@ var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var express = require("express");
 var logger = require("morgan");
-var path = require("path");
+require("reflect-metadata");
 var cors = require("cors");
 // import * as errorHandler from "errorHandler";
 var errorHandler = require("errorhandler");
@@ -28,8 +28,6 @@ var Server = /** @class */ (function () {
     function Server() {
         // create expressjs application
         this.app = express();
-        //create service dependency tree
-        this.resolveDependencies();
         // configure application
         this.config();
         // add routes
@@ -52,9 +50,9 @@ var Server = /** @class */ (function () {
      * Resolve Service dependencies
      *
      * @class Server
-     * @method resolveDependencies
+     * @method resolveServiceDependencies
      */
-    Server.prototype.resolveDependencies = function () {
+    Server.prototype.resolveServiceDependencies = function () {
         this.servicesDepencyTree = tsyringe_1.container.resolve(RootService_1.RootService);
     };
     /**
@@ -74,7 +72,8 @@ var Server = /** @class */ (function () {
      */
     Server.prototype.config = function () {
         // add static paths
-        this.app.use("/static", express.static(path.join(__dirname, "../www")));
+        // NOTE: Not Needed for now
+        // this.app.use("/static", express.static(path.join(__dirname, "../www")));
         // NOTE: NOT NEEDED for now
         // configure pug template engine
         // this.app.set("views", path.join(__dirname, "../views"));
