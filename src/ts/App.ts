@@ -1,14 +1,14 @@
 import * as bodyParser from "body-parser";
-import * as cookieParser from "cookie-parser";
-import * as express from "express";
-import * as logger from "morgan";
-import * as path from "path";
+import cookieParser from "cookie-parser";
+import express from "express";
+import logger from "morgan";
+// import * as path from "path";
 import "reflect-metadata";
-var cors = require("cors");
+// var cors = require("cors");
 
 // import * as errorHandler from "errorHandler";
-var errorHandler = require("errorhandler");
-import * as methodOverride from "method-override";
+// var errorHandler = require("errorhandler");
+import methodOverride from "method-override";
 // import methodOverride = require("method-override");
 
 // injector and references
@@ -100,7 +100,7 @@ export class Server {
 		this.app.use(logger("dev"));
 
 		// enable CORS
-		this.app.use(cors());
+		// this.app.use(cors());
 
 		//use json from parser middleware
 		this.app.use(bodyParser.json());
@@ -123,7 +123,7 @@ export class Server {
 		});
 
 		//error handling
-		this.app.use(errorHandler());
+		// this.app.use(errorHandler());
 	}
 
 	/**
@@ -134,20 +134,18 @@ export class Server {
    * @return void
    */
 	public routes() {
-		let router: express.Router;
-		let Router = express.Router;
-		router = express.Router();
+		const router: express.Router= express.Router();
 		let routes: BaseRoute[] = [];
 
 		// Routes init
 		container.register("Router", {
-			useClass: RouterService(router)
+			useValue: router
 		});
 
 		// TODO: iterate over routes and inject services to Routes(Controllers)
-		routes.push(container.resolve(IndexRoute)); // /
-		routes.push(container.resolve(StreamTubeRoute));
-		routes.push(container.resolve(SearchTubeRoute));
+		routes.push(container.resolve<IndexRoute>(IndexRoute));
+		// routes.push(container.resolve(StreamTubeRoute));
+		// routes.push(container.resolve(SearchTubeRoute));
 
 		//use router middleware
 		// registering the routes in the Express app
