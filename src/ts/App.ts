@@ -1,13 +1,14 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import express from "express";
+import express = require("express");
+import { Express } from "express-serve-static-core";
 import bunyan from "bunyan";
 import bunyanMiddleware from "bunyan-middleware";
 // import * as path from "path";
 import "reflect-metadata";
 var cors = require("cors");
 
-import errorHandler from "errorHandler";
+// import errorHandler from "errorHandler";
 import methodOverride from "method-override";
 // import methodOverride = require("method-override");
 
@@ -25,7 +26,7 @@ import { BaseRoute } from "./routes/BaseRoute/BaseRoute";
 export class Server {
 
 	private servicesDepencyTree: any;
-	public app: express.Application;
+	public app: Express;
 	private logger: any;
 
 	/**
@@ -34,7 +35,6 @@ export class Server {
 	 * @class Server
 	 * @method bootstrap
 	 * @static
-	 * @return {ng.auto.IInjectorService} Returns the newly created injector for this app.
 	 */
 	public static bootstrap(): Server {
 		return new Server();

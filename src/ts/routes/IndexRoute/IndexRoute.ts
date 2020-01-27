@@ -1,4 +1,5 @@
-import {NextFunction, Request, Response, Router} from "express";
+const express = require("express");
+import { NextFunction, Request, Response, Router } from "express-serve-static-core";
 import {BaseRoute} from "../BaseRoute/BaseRoute";
 import { inject, injectable } from "tsyringe";
 import { IIndexRoute } from "./IIndexRoute";

@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response, Router} from "express";
+import { NextFunction, Request, Response, Router } from "express-serve-static-core";
 import {BaseRoute} from "../BaseRoute/BaseRoute";
 import * as puppeteer from "puppeteer";
 import { injectable, inject } from "tsyringe";
