@@ -36,7 +36,7 @@ NOTES
 
 Prerequisites
 =============================================================
-* Use atleast node v.6
+* Use at least node v.6
 * Run `npm install -g @angular/cli@latest` to install angular-cli globally
 
 * In project folder run `npm install` to add node modules
@@ -60,5 +60,7 @@ App:
 Progress and Knowhow
 =============================================================
 - Have a working `/youtube-download/ZTY8vlKO9hg` route that will download audio.
+- Added WebPack because of latest TypeScript compatibility transpilation opitons.
+- Added almost working DI on the server
 - Learning how to debug with VSCode.
 
