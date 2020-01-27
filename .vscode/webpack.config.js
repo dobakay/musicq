@@ -11,10 +11,10 @@ module.exports = {
     devtool: 'source-map',
     devServer: {},
     mode: 'development',
-    node: {
-        fs: 'empty',
-        net: 'empty'
-    },
+    // node: {
+    //     fs: 'empty',
+    //     net: 'empty'
+    // },
 	/**
      * The "output" property is what our build files will be named and where the
      * build file will be placed
@@ -70,6 +70,11 @@ module.exports = {
                 use: 'awesome-typescript-loader'
             }   
         ]      
+    },
+    externals: {
+        puppeteer: 'require("puppeteer")',
+        express: 'require("express")',
+        fs: 'require("fs")',
     },
     plugins: [
         new CheckerPlugin()
