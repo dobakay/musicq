@@ -1,13 +1,13 @@
-import * as bodyParser from "body-parser";
+import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express from "express";
-import logger from "morgan";
+import bunyan from "bunyan";
+import bunyanMiddleware from "bunyan-middleware";
 // import * as path from "path";
 import "reflect-metadata";
-// var cors = require("cors");
+var cors = require("cors");
 
-// import * as errorHandler from "errorHandler";
-// var errorHandler = require("errorhandler");
+import errorHandler from "errorHandler";
 import methodOverride from "method-override";
 // import methodOverride = require("method-override");
 
@@ -26,6 +26,7 @@ export class Server {
 
 	private servicesDepencyTree: any;
 	public app: express.Application;
+	private logger: any;
 
 	/**
 	 * Bootstrap the application.
@@ -97,10 +98,23 @@ export class Server {
 		// this.app.set("view engine", "pug");
 
 		//use logger middleware
-		this.app.use(logger("dev"));
+		this.logger = bunyan.createLogger({ name: 'MusicQServer' });
+		
+		this.app.use(bunyanMiddleware(
+			{ 
+				headerName: 'X-Request-Id', 
+				propertyName: 'reqId',
+				logName: 'req_id',
+				obscureHeaders: [],
+				logger: this.logger,
+				additionalRequestFinishData: function(req, res) {
+					return { example: true }
+			  	}
+			}
+		));
 
 		// enable CORS
-		// this.app.use(cors());
+		this.app.use(cors());
 
 		//use json from parser middleware
 		this.app.use(bodyParser.json());
@@ -115,14 +129,14 @@ export class Server {
 		this.app.use(methodOverride());
 
 		//catch error 404 and forward to error errorhandler
-		this.app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-			// err.status = 404;
-			console.log(err);
-			res.status(500).send();
-			next(err);
-		});
+		// this.app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+		// 	// err.status = 404;
+		// 	console.log(err);
+		// 	res.status(500).send();
+		// 	next(err);
+		// });
 
-		//error handling
+		// //error handling
 		// this.app.use(errorHandler());
 	}
 
@@ -145,7 +159,7 @@ export class Server {
 		// TODO: iterate over routes and inject services to Routes(Controllers)
 		routes.push(container.resolve<IndexRoute>(IndexRoute));
 		// routes.push(container.resolve(StreamTubeRoute));
-		// routes.push(container.resolve(SearchTubeRoute));
+		routes.push(container.resolve<SearchTubeRoute>(SearchTubeRoute));
 
 		//use router middleware
 		// registering the routes in the Express app

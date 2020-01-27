@@ -1,15 +1,16 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {BaseRoute} from "../BaseRoute/BaseRoute";
 import * as puppeteer from "puppeteer";
-import { autoInjectable } from "tsyringe";
+import { injectable, inject } from "tsyringe";
+import {ISearchTubeRoute} from "./ISearchTubeRoute";
 
 /**
  * "/search-youtube/?query" route
  *
  * @class SearchTubeRoute
  */
-@autoInjectable()
-export class SearchTubeRoute extends BaseRoute {
+@injectable()
+export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
     browser: any;
     path: string;
     /**
@@ -19,12 +20,10 @@ export class SearchTubeRoute extends BaseRoute {
       * @constructor
       */
     // tslint:disable-next-line:typedef
-    constructor(router: Router) {
+    constructor(@inject("Router")router: Router) {
             super(router);
             this.path = "/search-youtube/";
-            this.router.get(this.path.toString(), (req: Request, res: Response, next: NextFunction) => {
-                this.index(req, res, next);
-            });
+            this.router.get(this.path, this.index);
 
           puppeteer.launch().then((br) => {
               this.browser = br;
@@ -49,7 +48,7 @@ export class SearchTubeRoute extends BaseRoute {
            this.search(req.query.q, res);
        }
 
-       async search(q: string, response: Response) {
+       public async search(q: string, response: Response) {
             const page = await this.browser.newPage();
             let json;
             page.on("response", async (res: Response) => {
