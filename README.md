@@ -48,6 +48,10 @@ How to start
 Server:
 * `gulp build` to build scripts
 * `gulp serve` to start server on port 8080
+## Update
+Project now runs on WebPack because of TypeScript compilation options. 
+For full list of available commands checkout `package.json`. Also before running the 
+Webpack transpilation process run in the project console the contents of file `alloc_options.sh`.
 
 App:
 * In a different console navigate to the `rootDirectory/dist/www`
