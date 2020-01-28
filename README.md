@@ -40,7 +40,7 @@ Prerequisites
 * Run `npm install -g @angular/cli@latest` to install angular-cli globally
 
 * In project folder run `npm install` to add node modules
-* Navigate to `dist/www/` and run npm install again.
+* Navigate to `bin/www/` and run npm install again.
 
 How to start
 =============================================================
@@ -54,7 +54,7 @@ For full list of available commands checkout `package.json`. Also before running
 Webpack transpilation process run in the project console the contents of file `alloc_options.sh`.
 
 App:
-* In a different console navigate to the `rootDirectory/dist/www`
+* In a different console navigate to the `rootDirectory/bin/www`
 * Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 Progress and Knowhow

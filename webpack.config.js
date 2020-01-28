@@ -11,36 +11,18 @@ module.exports = {
     devtool: 'source-map',
     devServer: {},
     mode: 'development',
-    // node: {
-    //     fs: 'empty',
-    //     net: 'empty'
-    // },
-	/**
-     * The "output" property is what our build files will be named and where the
-     * build file will be placed
-     */
     output: {
-        path: path.resolve(__dirname, '../bin/js/'),
+        path: path.resolve(__dirname, './bin/js/'),
         filename: '[name].js',
-        publicPath: '../bin/js/',
-        libraryTarget: "commonjs"
+        publicPath: './bin/js/',
+        libraryTarget: "commonjs2"
     },
-
-    // resolveLoader: {
-    //     modules: [
-    //         path.join(__dirname, './node_modules/source-map-loader/index.js'),
-    //         path.join(__dirname, './node_modules/awesome-typescript-loader/index.js'),
-    //     ]
-    // },
     resolve: {
         extensions: ['.ts', '.tsx', '.webpack.js', '.web.js', '.js'],
         symlinks:true,
         modules: [
             'node_modules',
-            // path.join(__dirname, './node_modules/source-map-loader/index.js'),
-            // path.join(__dirname, './node_modules/awesome-typescript-loader/index.js'),
-            // path.join(__dirname, './node_modules/tsyringe/index.js'),
-            path.resolve(__dirname, '../src/ts/')
+            path.resolve(__dirname, './src/ts/')
         ]
     },
 

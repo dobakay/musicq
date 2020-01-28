@@ -1,4 +1,3 @@
-const express = require("express");
 import { NextFunction, Request, Response, Router } from "express-serve-static-core";
 import {BaseRoute} from "../BaseRoute/BaseRoute";
 import { inject, injectable } from "tsyringe";
@@ -11,13 +10,11 @@ import { IIndexRoute } from "./IIndexRoute";
 @injectable()
 export class IndexRoute extends BaseRoute implements IIndexRoute{
     protected path: string;
-     /**
-      * Constructor
-      *
-      * @class IndexRoute
-      * @constructor
-      */
-    // tslint:disable-next-line:typedef
+    /**
+     * Constructor
+     *
+     * @class IndexRoute
+     */
     constructor(@inject("Router") router: Router) {
         super(router);
         this.path = "/";
@@ -43,7 +40,7 @@ export class IndexRoute extends BaseRoute implements IIndexRoute{
            let options: Object = {
                "message": "Welcome to MusicQ. Your party friend."
            };
-           res.sendfile("./dist/www/dist/index.html");
+           res.sendfile("./bin/www/dist/index.html");
        }
 
 }
