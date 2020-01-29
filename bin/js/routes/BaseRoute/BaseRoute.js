@@ -1,32 +1,23 @@
-import {NextFunction, Request, Response, Router} from "express";
-import { IBaseRoute } from "./IBaseRoute";
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Constructor
  *
  * @class BaseRoute
  */
-export class BaseRoute implements IBaseRoute {
-
-    protected title: string;
-    protected path: string;
-    protected router: Router;
-
-    private scripts: string[];
-
+class BaseRoute {
     /**
      * Constructor
      *
      * @class BaseRoute
      * @constructor
      */
-    constructor(router: Router) {
+    constructor(router) {
         this.title = "Doba's MusicQ proj";
         this.path = "";
         this.scripts = [];
         this.router = router;
     }
-
     /**
      * Add a JS external file to the request.
      *
@@ -35,11 +26,10 @@ export class BaseRoute implements IBaseRoute {
      * @param src {string} The scr to the external JS file.
      * @return {BaseRoute} Self for chaining
      */
-    addScript(src: string): BaseRoute {
+    addScript(src) {
         this.scripts.push(src);
         return this;
     }
-
     /**
      * Render a page.
      *
@@ -51,23 +41,21 @@ export class BaseRoute implements IBaseRoute {
      * @param options {Object} Additional options to append to the views local scope.
      * @return void
      */
-    render(req: Request, res: Response, view: string, options?: Object) {
+    render(req, res, view, options) {
         //add constants
         res.locals.BASE_URL = "/";
-
         //add scripts
         res.locals.scripts = this.scripts;
-
         //add title
         res.locals.title = this.title;
-
         //render view
         // res.render(view, options);
-
         // res.status(500).json({
         //     message: err.message,
         //     error: err
         // });
     }
-
 }
+exports.BaseRoute = BaseRoute;
+
+//# sourceMappingURL=../../source_maps/routes/BaseRoute/BaseRoute.js.map

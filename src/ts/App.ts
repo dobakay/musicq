@@ -1,3 +1,4 @@
+//Server dependencies
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express = require("express");
@@ -16,12 +17,14 @@ import methodOverride from "method-override";
 import "reflect-metadata";
 import { container } from "tsyringe";
 
+// services
+import { RootService } from "./services/RootService";
+
 // Routes
+import { BaseRoute } from "./routes/BaseRoute/BaseRoute";
 import { IndexRoute } from "./routes/IndexRoute/IndexRoute";
 import { StreamTubeRoute } from "./routes/StreamTubeRoute/StreamTubeRoute";
 import { SearchTubeRoute } from "./routes/SearchTubeRoute/SearchTubeRoute";
-import { RootService } from "./services/RootService";
-import { BaseRoute } from "./routes/BaseRoute/BaseRoute";
 
 export class Server {
 
@@ -98,20 +101,20 @@ export class Server {
 		// this.app.set("view engine", "pug");
 
 		//use logger middleware
-		this.logger = bunyan.createLogger({ name: 'MusicQServer' });
+		// this.logger = bunyan.createLogger({ name: 'MusicQServer' });
 		
-		this.app.use(bunyanMiddleware(
-			{ 
-				headerName: 'X-Request-Id', 
-				propertyName: 'reqId',
-				logName: 'req_id',
-				obscureHeaders: [],
-				logger: this.logger,
-				additionalRequestFinishData: function(req, res) {
-					return { example: true }
-			  	}
-			}
-		));
+		// this.app.use(bunyanMiddleware(
+		// 	{ 
+		// 		headerName: 'X-Request-Id', 
+		// 		propertyName: 'reqId',
+		// 		logName: 'req_id',
+		// 		obscureHeaders: [],
+		// 		logger: this.logger,
+		// 		additionalRequestFinishData: function(req, res) {
+		// 			return { example: true }
+		// 	  	}
+		// 	}
+		// ));
 
 		// enable CORS
 		this.app.use(cors());
@@ -148,7 +151,7 @@ export class Server {
    * @return void
    */
 	public routes() {
-		const router: express.Router= express.Router();
+		const router = express.Router();
 		let routes: BaseRoute[] = [];
 
 		// Routes init
@@ -158,7 +161,7 @@ export class Server {
 
 		// TODO: iterate over routes and inject services to Routes(Controllers)
 		routes.push(container.resolve<IndexRoute>(IndexRoute));
-		// routes.push(container.resolve(StreamTubeRoute));
+		routes.push(container.resolve(StreamTubeRoute));
 		routes.push(container.resolve<SearchTubeRoute>(SearchTubeRoute));
 
 		//use router middleware

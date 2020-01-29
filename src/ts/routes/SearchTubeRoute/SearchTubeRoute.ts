@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express-serve-static-core";
 import {BaseRoute} from "../BaseRoute/BaseRoute";
-import * as puppeteer from "puppeteer";
+import puppeteer from "puppeteer";
 import { injectable, inject } from "tsyringe";
 import {ISearchTubeRoute} from "./ISearchTubeRoute";
 
@@ -19,15 +19,15 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
       * @class SearchTubeRoute
       * @constructor
       */
-    // tslint:disable-next-line:typedef
-    constructor(@inject("Router")router: Router) {
-            super(router);
-            this.path = "/search-youtube/";
-            this.router.get(this.path, this.index);
+    // tslint:disable-next-line:typedef 
+    constructor(@inject("Router") router: Router) { 
+        super(router);
+        this.path = "/search-youtube/";
+        this.router.get(this.path, this.index);
 
-          puppeteer.launch().then((br) => {
-              this.browser = br;
-          });
+        puppeteer.launch().then((br) => {
+            this.browser = br;
+        });
       }
 
       /**

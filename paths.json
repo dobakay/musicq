@@ -16,7 +16,7 @@
         "output": "bin/youtube_dl/"
     },
     "scripts": {
-        "input": "src/ts/*",
+        "input": "./src/ts/**/*.ts",
         "output_definitions": "bin/js/definitions/",
         "source_maps": "./source_maps/",
         "clear": "bin/js/*",

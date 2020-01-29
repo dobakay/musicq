@@ -80,8 +80,7 @@ gulp.task('server', () => {
 
 let serverStarted = false;
 gulp.task('watch', () => {
-    gulp.emit('startServer');
-    return watch(paths.input,() => gulp.start('build'));
+    return gulp.watch(paths.scripts.input, gulp.series('build'));
 });
 
 gulp.once('startServer', () => {
