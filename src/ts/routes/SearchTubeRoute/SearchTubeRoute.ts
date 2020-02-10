@@ -22,8 +22,8 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
     // tslint:disable-next-line:typedef 
     constructor(@inject("Router") router: Router) { 
         super(router);
-        this.path = "/search-youtube/";
-        this.router.get(this.path, this.index);
+		this.path = "/search-youtube/";
+        this.router.get(this.path, () => this.index);
 
         puppeteer.launch().then((br) => {
             this.browser = br;
@@ -40,12 +40,13 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
        * @param next {NextFunction} Execute the next method.
        */
        public index(req: Request, res: Response, next: NextFunction) {
-           // set custom title
-           this.title = "MusiqQ Home";
+			// set custom title
+			console.log(this);
+			this.title = "MusiqQ Home";
 
-           //set options
-        //    console.log(req.query.q);
-           this.search(req.query.q, res);
+           	//set options
+			//    console.log(req.query.q);
+           	this.search(req.query.q, res);
        }
 
        public async search(q: string, response: Response) {

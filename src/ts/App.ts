@@ -160,9 +160,9 @@ export class Server {
 		});
 
 		// TODO: iterate over routes and inject services to Routes(Controllers)
-		routes.push(container.resolve<IndexRoute>(IndexRoute));
+		routes.push(container.resolve(IndexRoute));
 		routes.push(container.resolve(StreamTubeRoute));
-		routes.push(container.resolve<SearchTubeRoute>(SearchTubeRoute));
+		routes.push(container.resolve(SearchTubeRoute));
 
 		//use router middleware
 		// registering the routes in the Express app

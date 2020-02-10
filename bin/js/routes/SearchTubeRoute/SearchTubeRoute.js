@@ -42,7 +42,7 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
     constructor(router) {
         super(router);
         this.path = "/search-youtube/";
-        this.router.get(this.path, this.index);
+        this.router.get(this.path, () => this.index);
         puppeteer_1.default.launch().then((br) => {
             this.browser = br;
         });
@@ -58,6 +58,7 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
      */
     index(req, res, next) {
         // set custom title
+        console.log(this);
         this.title = "MusiqQ Home";
         //set options
         //    console.log(req.query.q);
