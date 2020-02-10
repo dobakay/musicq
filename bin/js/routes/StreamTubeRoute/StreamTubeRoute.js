@@ -34,7 +34,9 @@ let StreamTubeRoute = class StreamTubeRoute extends BaseRoute_1.BaseRoute {
     constructor(router) {
         super(router);
         this.path = "/youtube-download/:videoID";
-        this.router.get(this.path, this.download);
+        this.router.get(this.path, (req, res, next) => {
+            this.download.call(this, req, res, next);
+        });
     }
     /**
      * The tube download page route.

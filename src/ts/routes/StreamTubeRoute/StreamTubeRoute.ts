@@ -26,7 +26,9 @@ export class StreamTubeRoute extends BaseRoute implements IStreamTubeRoute {
     constructor(@inject("Router") router: Router) {
         super(router);
         this.path = "/youtube-download/:videoID";
-        this.router.get(this.path, this.download);
+        this.router.get(this.path, (req, res, next) => {
+			this.download.call(this, req, res, next);
+		});
     }
 
     /**

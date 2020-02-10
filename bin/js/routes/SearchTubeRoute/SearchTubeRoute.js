@@ -63,7 +63,6 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
         console.log(this);
         this.title = "MusiqQ Home";
         //set options
-        console.log(req.query.q);
         this.search(req.query.q, res);
     }
     search(q, response) {
@@ -85,13 +84,17 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
                 // 		msg: "search page was closed"
                 // 	});
                 // });
+                yield page.setExtraHTTPHeaders({ Referer: "https://youtube.com" });
                 yield page.goto("https://youtube.com");
-                yield page.type("#search", q);
-                yield page.click("button#search-icon-legacy");
-                yield page.close;
+                setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                    yield page.type("#search", q);
+                    yield page.click("button#search-icon-legacy");
+                    yield page.waitForSelector('div.container contents');
+                    yield page.close;
+                }), 300);
             }
-            catch (e) {
-                console.log(e);
+            catch (_a) {
+                console.log("Losho Sedlarov Losho");
             }
         });
     }

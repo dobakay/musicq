@@ -47,7 +47,6 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
 			this.title = "MusiqQ Home";
 
            	//set options
-			   console.log(req.query.q);
            	this.search(req.query.q, res);
        }
 
@@ -69,12 +68,16 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
 				// 		msg: "search page was closed"
 				// 	});
 				// });
+				await page.setExtraHTTPHeaders({Referer: "https://youtube.com"}); 
 				await page.goto("https://youtube.com");
-				await page.type("#search", q);
-				await page.click("button#search-icon-legacy");
-				await page.close;
-			} catch(e) {
-				console.log(e);
+				setTimeout(async () => {
+					await page.type("#search", q);
+					await page.click("button#search-icon-legacy");
+					await page.waitForSelector('div.container contents')
+					await page.close;
+				}, 300);
+			} catch {
+				console.log("Losho Sedlarov Losho");
 			}
         }
 }

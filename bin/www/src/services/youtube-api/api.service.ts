@@ -98,7 +98,7 @@ export class YoutubeApiService {
           filter((item) => {
             return Object.keys(item).indexOf('videoRenderer') !== -1;
           }),
-          map(o => o.videoRenderer),
+          map(o => o['videoRenderer']),
           map((o) => {
             return {
               lengthText: o.lengthText,
