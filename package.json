@@ -33,6 +33,7 @@
   "homepage": "https://github.com/Putzmitt3l/musicq#readme",
   "devDependencies": {
     "@types/body-parser": "^1.16.7",
+    "@types/cheerio": "^0.22.16",
     "@types/cookie-parser": "^1.4.1",
     "@types/debug": "0.0.29",
     "@types/errorhandler": "0.0.32",
@@ -88,6 +89,7 @@
   },
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "debug": "^2.6.8",

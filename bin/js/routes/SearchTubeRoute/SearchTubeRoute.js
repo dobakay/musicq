@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BaseRoute_1 = require("../BaseRoute/BaseRoute");
 const puppeteer_1 = __importDefault(require("puppeteer"));
 const tsyringe_1 = require("tsyringe");
+const cheerio_1 = __importDefault(require("cheerio"));
 /**
  * "/search-youtube/?query" route
  *
@@ -41,6 +42,8 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
     // tslint:disable-next-line:typedef 
     constructor(router) {
         super(router);
+        this.all_videos = new Set();
+        this.sleep = (seconds) => new Promise(resolve => setTimeout(resolve, (seconds || 1) * 1000));
         this.path = "/search-youtube/";
         this.router.get(this.path, (req, res, next) => {
             this.index.call(this, req, res, next);
@@ -60,7 +63,6 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
      */
     index(req, res, next) {
         // set custom title
-        console.log(this);
         this.title = "MusiqQ Home";
         //set options
         this.search(req.query.q, res);
@@ -70,33 +72,66 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
             try {
                 const page = yield this.browser.newPage();
                 let json;
-                page.on("response", (res) => __awaiter(this, void 0, void 0, function* () {
-                    json = yield res.json();
-                    response.json(json);
-                }));
                 page.on("error", (er) => {
                     console.log(er);
                 });
-                // page.on("close", (e: Event) => {
-                // 	console.log(JSON.stringify(e));
-                // 	response.send({
-                // 		serverEvent: JSON.stringify(e),
-                // 		msg: "search page was closed"
-                // 	});
-                // });
                 yield page.setExtraHTTPHeaders({ Referer: "https://youtube.com" });
                 yield page.goto("https://youtube.com");
-                setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                    yield page.type("#search", q);
-                    yield page.click("button#search-icon-legacy");
-                    yield page.waitForSelector('div.container contents');
-                    yield page.close;
-                }), 300);
+                yield page.waitForSelector('input[id="search"]', { timeout: 5000 });
+                const input = yield page.$('input[id="search"]');
+                // overwrites last text in input
+                yield input.click({ clickCount: 3 });
+                yield input.type(q);
+                yield input.focus();
+                yield page.keyboard.press("Enter");
+                yield page.waitForFunction(`document.title.indexOf('${q}') !== -1`, { timeout: 5000 });
+                yield page.waitForSelector('ytd-video-renderer,ytd-grid-video-renderer', { timeout: 5000 });
+                yield this.sleep(1);
+                json = yield page.content();
+                json = this.parse(json);
+                response.json(json);
+                yield page.close;
             }
-            catch (_a) {
+            catch (e) {
+                console.log(e);
                 console.log("Losho Sedlarov Losho");
             }
         });
+    }
+    parse(html) {
+        // load the page source into cheerio
+        const $ = cheerio_1.default.load(html);
+        // perform queries
+        const results = [];
+        $('#contents ytd-video-renderer,#contents ytd-grid-video-renderer').each((i, link) => {
+            results.push({
+                link: $(link).find('#video-title').attr('href'),
+                title: $(link).find('#video-title').text(),
+                snippet: $(link).find('#description-text').text(),
+                channel: $(link).find('#byline a').text(),
+                channel_link: $(link).find('#byline a').attr('href'),
+                num_views: $(link).find('#metadata-line span:nth-child(1)').text(),
+                release_date: $(link).find('#metadata-line span:nth-child(2)').text(),
+            });
+        });
+        const cleaned = [];
+        for (var i = 0; i < results.length; i++) {
+            let res = results[i];
+            if (res.link && res.link.trim() && res.title && res.title.trim()) {
+                res.title = res.title.trim();
+                res.snippet = res.snippet.trim();
+                res.rank = i + 1;
+                // check if this result has been used before
+                if (this.all_videos.has(res.title) === false) {
+                    cleaned.push(res);
+                }
+                this.all_videos.add(res.title);
+            }
+        }
+        return {
+            time: (new Date()).toUTCString(),
+            results: cleaned,
+        };
     }
 };
 SearchTubeRoute = __decorate([

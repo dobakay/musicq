@@ -9,6 +9,7 @@ import { ISearchTubeRoute } from "./ISearchTubeRoute";
 export declare class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
     browser: any;
     path: string;
+    all_videos: Set<any>;
     /**
       * Constructor
       *
@@ -26,5 +27,7 @@ export declare class SearchTubeRoute extends BaseRoute implements ISearchTubeRou
      * @param next {NextFunction} Execute the next method.
      */
     index(req: Request, res: Response, next: NextFunction): void;
+    private sleep;
     search(q: string, response: Response): Promise<void>;
+    private parse;
 }

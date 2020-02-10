@@ -34,10 +34,10 @@ export class MusicqComponent implements OnInit {
   search(e) {
     this.searchMatches = [];
     let match = from(this.youtube.searchHeadless(e._query))
-                .subscribe((val) => {
-                  console.log(val);
-                  this.searchMatches.push(val);
-                });
+                // .subscribe((val) => {
+                //   console.log(val);
+                //   this.searchMatches.push(val);
+                // });
   }
 
   playTestTrack() {
