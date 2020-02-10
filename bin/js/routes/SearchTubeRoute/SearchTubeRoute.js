@@ -42,7 +42,9 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
     constructor(router) {
         super(router);
         this.path = "/search-youtube/";
-        this.router.get(this.path, () => this.index);
+        this.router.get(this.path, (req, res, next) => {
+            this.index.call(this, req, res, next);
+        });
         puppeteer_1.default.launch().then((br) => {
             this.browser = br;
         });
@@ -61,30 +63,36 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
         console.log(this);
         this.title = "MusiqQ Home";
         //set options
-        //    console.log(req.query.q);
+        console.log(req.query.q);
         this.search(req.query.q, res);
     }
     search(q, response) {
         return __awaiter(this, void 0, void 0, function* () {
-            const page = yield this.browser.newPage();
-            let json;
-            page.on("response", (res) => __awaiter(this, void 0, void 0, function* () {
-                json = yield res.json();
-                response.send(json);
-            }));
-            page.on("error", (er) => {
-                console.log(er);
-            });
-            page.on("close", (e) => {
-                response.send({
-                    serverEvent: JSON.stringify(e),
-                    msg: "search page was closed"
+            try {
+                const page = yield this.browser.newPage();
+                let json;
+                page.on("response", (res) => __awaiter(this, void 0, void 0, function* () {
+                    json = yield res.json();
+                    response.json(json);
+                }));
+                page.on("error", (er) => {
+                    console.log(er);
                 });
-            });
-            yield page.goto("https://youtube.com");
-            yield page.type("#search", q);
-            yield page.click("button#search-icon-legacy");
-            yield page.close;
+                // page.on("close", (e: Event) => {
+                // 	console.log(JSON.stringify(e));
+                // 	response.send({
+                // 		serverEvent: JSON.stringify(e),
+                // 		msg: "search page was closed"
+                // 	});
+                // });
+                yield page.goto("https://youtube.com");
+                yield page.type("#search", q);
+                yield page.click("button#search-icon-legacy");
+                yield page.close;
+            }
+            catch (e) {
+                console.log(e);
+            }
         });
     }
 };

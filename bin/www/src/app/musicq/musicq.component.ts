@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MusicService } from '../../services/music-service/music-service.service';
 import { YoutubeApiService } from '../../services/youtube-api/api.service';
-import { Observable, from} from 'rxjs';
+import { Observable, from, of} from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { map, filter, catchError, mergeMap, flatMap } from 'rxjs/operators';
 
 @Component({
@@ -32,12 +33,11 @@ export class MusicqComponent implements OnInit {
 
   search(e) {
     this.searchMatches = [];
-    let match = from(this.youtube.searchHeadless(e._query));
-    match
-      .subscribe((res) => {
-        console.log(res);
-        // this.searchMatches = res;
-      });
+    let match = from(this.youtube.searchHeadless(e._query))
+                .subscribe((val) => {
+                  console.log(val);
+                  this.searchMatches.push(val);
+                });
   }
 
   playTestTrack() {

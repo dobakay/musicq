@@ -25,7 +25,7 @@ export class CardComponent implements OnInit {
   }
 
   playSong(e) {
-    this.songSelect.emit({songId:this.item.id.videoId});
+    this.songSelect.emit({songId:this.item.id});
   }
 
 }

@@ -89,12 +89,15 @@ export class YoutubeApiService {
     return data.response.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
   }
 
-  async searchHeadless(q?) {
+  searchHeadless(q?) {
     try {
       return this.http.get('http://localhost:8080/search-youtube/?q=' + q)
         .pipe(map(this.extractThumbnails),
           flatMap((item) => item),
-          filter((item) => item.videoRenderer),
+          flatMap((item) => item),
+          filter((item) => {
+            return Object.keys(item).indexOf('videoRenderer') !== -1;
+          }),
           map(o => o.videoRenderer),
           map((o) => {
             return {
@@ -105,11 +108,11 @@ export class YoutubeApiService {
               fullObject: o
             };
           })
-        )
-        .subscribe((val) => {
-          console.log(val);
-          return new Observable();
-        });
+        );
+        // .subscribe((val) => {
+        //   console.log(val);
+        //   return new Observable();
+        // });
     } catch (error) {
       console.log(error);
     }
