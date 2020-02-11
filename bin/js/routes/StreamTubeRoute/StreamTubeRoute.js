@@ -64,7 +64,7 @@ let StreamTubeRoute = class StreamTubeRoute extends BaseRoute_1.BaseRoute {
     streamAudio(req, res, next) {
         let videoID = req.params.videoID; //"ZTY8vlKO9hg";
         let videoURL = "https://www.youtube.com/watch?v=" + videoID;
-        this.downloadWithYoutubeDl(videoURL, res);
+        this.downloadWithYoutubeDl(videoURL, req, res);
     }
     /**
      * Download a single video with youtube-dl
@@ -72,7 +72,7 @@ let StreamTubeRoute = class StreamTubeRoute extends BaseRoute_1.BaseRoute {
      * @param outputFile
      * @return Event
      */
-    downloadWithYoutubeDl(url, response, outputFile) {
+    downloadWithYoutubeDl(url, request, response, outputFile) {
         return __awaiter(this, void 0, void 0, function* () {
             // const stream = youtubedl(url, ['-f', 'bestaudio/best', '--no-check-certificate'], { maxBuffer: Infinity });
             var stream = youtubedl(url); //include youtbedl ... var youtubedl = require('ytdl');
@@ -96,6 +96,11 @@ let StreamTubeRoute = class StreamTubeRoute extends BaseRoute_1.BaseRoute {
             proc.setFfmpegPath(path.resolve(__dirname + '../../../../youtube_dl/ffmpeg.exe'))
                 .toFormat('mp3')
                 .output(response).run();
+            request.connection.on('close', function () {
+                // code to handle connection abort
+                console.log('user cancelled');
+                proc.kill();
+            });
         });
     }
     ;

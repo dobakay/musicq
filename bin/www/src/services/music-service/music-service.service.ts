@@ -17,35 +17,19 @@ export class MusicService {
   }
 
   play(url, options?) {
-    if(!this.audio) {
+    if(this.audio) {
+      this.source.src = url;
+      this.audio.load();
+    } else {
       this.audio = document.createElement('audio');
       this.source = document.createElement('source');
       this.audio.appendChild(this.source);
       document.body.appendChild(this.audio);
       this.source.src = url;
-      this.audio.setAttribute('autoplay', "");
+      this.audio.load();
     }
-    
-    let playPromise = this.audio.play();
-    // In browsers that don’t yet support this functionality,
-    // playPromise won’t be defined.
-    if (playPromise !== undefined) {
-      playPromise.then(function(a) {
-        // Automatic playback started!
-      }).catch(function(error) {
-        // Automatic playback failed.
-        console.log(error);
-        // Show a UI element to let the user manually start playback.
-      });
-    }
+    this.audio.play();
   }
-
-  // getPlaylistTracks() {
-  //   // Request for a playlist via Soundcloud using a client id
-  //   return this.apiService.get('https://api.soundcloud.com/playlists/209262931')
-  //     .map(res => res.json())
-  //     .map(data => data.tracks);
-  // }
 
   randomTrack(tracks) {
     const trackLength = tracks.length;

@@ -53,7 +53,7 @@ export class StreamTubeRoute extends BaseRoute implements IStreamTubeRoute {
     public streamAudio(req: Request, res: Response, next: NextFunction) {
         let videoID = req.params.videoID; //"ZTY8vlKO9hg";
         let videoURL = "https://www.youtube.com/watch?v=" + videoID;
-        this.downloadWithYoutubeDl(videoURL, res);
+        this.downloadWithYoutubeDl(videoURL, req,  res);
     }
 
     /**
@@ -62,7 +62,7 @@ export class StreamTubeRoute extends BaseRoute implements IStreamTubeRoute {
      * @param outputFile
      * @return Event
      */
-    private async downloadWithYoutubeDl(url: string, response: Response, outputFile?: any) {
+    private async downloadWithYoutubeDl(url: string, request: Request, response: Response, outputFile?: any) {
         // const stream = youtubedl(url, ['-f', 'bestaudio/best', '--no-check-certificate'], { maxBuffer: Infinity });
         var stream = youtubedl(url); //include youtbedl ... var youtubedl = require('ytdl');
         
@@ -87,6 +87,12 @@ export class StreamTubeRoute extends BaseRoute implements IStreamTubeRoute {
         proc.setFfmpegPath(path.resolve(__dirname + '../../../../youtube_dl/ffmpeg.exe'))
             .toFormat('mp3')
             .output(response).run();
+
+        request.connection.on('close',function(){    
+            // code to handle connection abort
+            console.log('user cancelled');
+            proc.kill();
+        });
     };
 
     /**
