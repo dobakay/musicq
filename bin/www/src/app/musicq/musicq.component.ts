@@ -33,11 +33,11 @@ export class MusicqComponent implements OnInit {
 
   search(e) {
     this.searchMatches = [];
-    let match = from(this.youtube.searchHeadless(e._query))
-                .subscribe((val) => {
-                  console.log(val);
-                  this.searchMatches = val;
-                });
+    from(this.youtube.searchHeadless(e._query))
+    .subscribe((val: any) => {
+      console.log(val);
+      this.searchMatches = val;
+    });
   }
 
   playTestTrack() {

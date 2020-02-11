@@ -28,6 +28,13 @@ export declare class SearchTubeRoute extends BaseRoute implements ISearchTubeRou
      */
     index(req: Request, res: Response, next: NextFunction): void;
     private sleep;
-    search(q: string, response: Response): Promise<void>;
-    private parse;
+    /**
+     * Search a query on YouTube and return the detailed results
+     * @param query string
+     * @param regionCode string ISO 3166-1 alpha-2 country code (ex: FR, US)
+     * @param relevanceLanguage string ISO 639-1 two-letter language code (ex: en: fr)
+     * @param v boolean Verbosity
+     * @return Promise
+     */
+    search(query: string, response: Response, regionCode?: string, relevanceLanguage?: string, v?: Boolean): any;
 }

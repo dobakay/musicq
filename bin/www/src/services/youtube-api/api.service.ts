@@ -93,10 +93,7 @@ export class YoutubeApiService {
 
   searchHeadless(q?) {
     try {
-      return this.http.get('http://localhost:8080/search-youtube/?q=' + q)
-                .pipe(
-                  map((res) => res['results'])
-                );
+      return this.http.get('http://localhost:8080/search-youtube/?q=' + q);
     } catch (error) {
       console.log(error);
       return new Observable();
