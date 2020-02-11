@@ -6,7 +6,7 @@
     "start": "npm run serve",
     "build": "npm run build-sass && npm run build-ts && npm run lint && npm run copy-static-assets",
     "serve": "node bin/js/index.js",
-    "watch-node": "nodemon bin/js/index.js --port=4300",
+    "watch-node": "nodemon bin/js/index.js --port=8080",
     "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "jest --forceExit --coverage --verbose",
     "watch-test": "npm run test -- --watchAll",
@@ -98,12 +98,16 @@
     "debug": "^2.6.8",
     "errorhandler": "^1.5.0",
     "ffmpeg": "0.0.4",
+    "ffmpeg-stream": "^0.6.0",
     "ffprobe": "^1.1.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs-extra": "^8.1.0",
     "lodash": "^4.17.15",
     "method-override": "^2.3.10",
     "nodemon": "^2.0.2",
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
-    "youtube-audio-stream": "^0.2.0"
+    "youtube-audio-stream": "^0.2.0",
+    "youtube-dl": "^3.0.2"
   }
 }

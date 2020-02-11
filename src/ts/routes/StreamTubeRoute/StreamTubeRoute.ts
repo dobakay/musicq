@@ -5,9 +5,13 @@ import { spawn, exec } from "child_process";
 import { fromDir, getSubStringBetweenTwoStrings } from "../../utils";
 import { StringDecoder } from "string_decoder";
 import { injectable, inject } from "tsyringe";
+const youtubedl = require('youtube-dl');
+const ffmpeg = require("fluent-ffmpeg")
+const path = require('path');
+const fs = require('fs-extra');
+const EventEmitter = require('events');
 
 var ytStream = require("youtube-audio-stream");
-var fs = require("fs");
 
 /**
  * "/youtube-download/:videoID" route
@@ -48,50 +52,156 @@ export class StreamTubeRoute extends BaseRoute implements IStreamTubeRoute {
 
     public streamAudio(req: Request, res: Response, next: NextFunction) {
         let videoID = req.params.videoID; //"ZTY8vlKO9hg";
-        let videoURL = "http://www.youtube.com/watch?v=" + videoID;
-        ytStream(videoURL).pipe(res);
+        let videoURL = "https://www.youtube.com/watch?v=" + videoID;
+        this.downloadWithYoutubeDl(videoURL, res);
     }
 
-    public downloadAudioToRoot(req: Request, res: Response, next: NextFunction) {
+    /**
+     * Download a single video with youtube-dl
+     * @param url
+     * @param outputFile
+     * @return Event
+     */
+    private async downloadWithYoutubeDl(url: string, response: Response, outputFile?: any) {
+        // const stream = youtubedl(url, ['-f', 'bestaudio/best', '--no-check-certificate'], { maxBuffer: Infinity });
+        var stream = youtubedl(url); //include youtbedl ... var youtubedl = require('ytdl');
+        
+        //set response headers
+        // response.setHeader('Content-disposition', 'attachment; filename=' + title + '.mp3');
+        response.setHeader('Content-type', 'audio/mpeg');
+        
+        //set stream for conversion
+        var proc = new ffmpeg({source: stream});
+        proc.on('error', function (e:any) {
+            console.log(e);
+        });
+        proc.on('end', function() {
+            console.log('finished');
+        });
+        proc.on('error', function (e:any) {
+            console.log(e);
+        });
+        proc.on('progress', function(progress: any) {
+            console.log('Processing: ' + progress.percent + '% done');
+        });
+        proc.setFfmpegPath(path.resolve(__dirname + '../../../../youtube_dl/ffmpeg.exe'))
+            .toFormat('mp3')
+            .output(response).run();
+    };
 
-        let videoURL = `https://www.youtube.com/watch?v=${ req.params.videoID}`;
-
-        let tubeDl = spawn("./bin/youtube_dl/youtube-dl", ["--extract-audio", "--audio-format", "mp3", "--audio-quality", "9", videoURL]);
-
-        let decoder = new StringDecoder("utf8");
-        let dataStr: string;
-        let fileName: string;
-
-        tubeDl.stdout.on("data", (data: Buffer) => {
-            dataStr = decoder.write(data);
-            if (dataStr.indexOf("mp3") !== -1) {
-
-                fileName = getSubStringBetweenTwoStrings(dataStr, "Destination: ", `-${req.params.videoID}.mp3`);
-                console.log(`FILE NAME IZ: ${fileName}`);
+    /**
+     * Convert a outputFile in MP3
+     * @param inputFile
+     * @param outputFile
+     * @param bitrate string
+     * @return Event
+     */
+    private convertInMP3(inputFile: any, response: Response, outputFile: any, bitrate: ArrayBuffer) {
+        const convertEmitter = new EventEmitter();
+        let aborted = false;
+        let started = false;
+    
+        let convert = ffmpeg(inputFile);
+        const onProgress = (progress: any) => {
+        convertEmitter.emit('convert-progress', {
+            progress: progress.percent,
+        });
+        };
+    
+        convert
+        .audioBitrate(bitrate)
+        .audioCodec('libmp3lame')
+        .once('codecData', (_data: any) => {
+            convertEmitter.emit('convert-start');
+        })
+        .on('progress', onProgress)
+        .once('end', () => {
+            convert.removeListener('progress', onProgress);
+            fs.unlinkSync(inputFile);
+            convertEmitter.emit('convert-end');
+        })
+        .once('error', (e: Error) => {
+            convert.removeListener('progress', onProgress);
+            if (!aborted) {
+            convertEmitter.emit('error', e);
+            } else {
+            if (fs.existsSync(inputFile)) {
+                fs.unlink(inputFile, () => {});
             }
-        });
+            if (fs.existsSync(outputFile)) {
+                fs.unlink(outputFile, () => {});
+            }
+            }
+        })
+        .once('start', () => {
+            started = true;
+            if (aborted) {
+            abort();
+            }
+        })
+        .save(outputFile);
+    
+        const abort = () => {
+        aborted = true;
+        if (started) {
+            convert.kill();
+        }
+        };
+    
+        convertEmitter.once('abort', abort);
+    
+        return convertEmitter;
+    };
 
-        tubeDl.stdout.on("end", () => {
-            console.log(dataStr);
-        });
-
-        tubeDl.stderr.on("data", (data) => {
-            console.log(`stderr: ${data}`);
-        });
-
-        tubeDl.on("exit", (code) => {
-            fs.readFile(`./${fileName}${req.params.videoID}.mp3`, (err: Error, data: any) => {
-                // We set our content type so consumers of our API know what they are getting
-                res.setHeader("Content-Type", "audio/mpeg3");
-                res.send(data);
-                next();
-            });
-        });
-
-        tubeDl.on("close", (code) => {
-            console.log(`child process exited with code ${code}`);
-        });
-
-    }
-
+    // downloadSingleURL = (url, outputFile, bitrate) => {
+    //     const progressEmitter = new EventEmitter();
+    //     let tempFile = outputFile + '.video';
+    //     let downloadEnded = false;
+    //     let convert;
+      
+    //     const dl = at3.downloadWithYoutubeDl(url, tempFile);
+    //     const onDlProgress = (infos) => {
+    //       progressEmitter.emit('download', {
+    //         progress: infos.progress,
+    //       });
+    //     };
+      
+    //     dl.once('download-start', () => {
+    //       progressEmitter.emit('start');
+    //     });
+    //     dl.on('download-progress', onDlProgress);
+      
+    //     dl.once('download-end', () => {
+    //       downloadEnded = true;
+    //       dl.removeListener('download-progress', onDlProgress);
+    //       progressEmitter.emit('download-end');
+      
+    //       convert = at3.convertInMP3(tempFile, outputFile, bitrate);
+    //       const onConvertProgress = (infos) => {
+    //         progressEmitter.emit('convert', {
+    //           progress: infos.progress,
+    //         });
+    //       };
+    //       convert.on('convert-progress', onConvertProgress);
+    //       convert.once('convert-end', () => {
+    //         convert.removeListener('convert-progress', onConvertProgress);
+    //         progressEmitter.emit('end');
+    //       });
+    //       convert.once('error', (error) => {
+    //         progressEmitter.emit('error', error);
+    //       });
+    //     });
+      
+    //     dl.once('error', (error) => {
+    //       dl.removeListener('download-progress', onDlProgress);
+    //       progressEmitter.emit('error', new Error(error));
+    //     });
+      
+    //     progressEmitter.once('abort', () => {
+    //       if (!downloadEnded) {
+    //         dl.emit('abort');
+    //       } else {
+    //         convert.emit('abort');
+    //       }
+    //     });
 }

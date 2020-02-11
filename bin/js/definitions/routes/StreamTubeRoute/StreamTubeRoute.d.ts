@@ -25,5 +25,19 @@ export declare class StreamTubeRoute extends BaseRoute implements IStreamTubeRou
      */
     download(req: Request, res: Response, next: NextFunction): void;
     streamAudio(req: Request, res: Response, next: NextFunction): void;
-    downloadAudioToRoot(req: Request, res: Response, next: NextFunction): void;
+    /**
+     * Download a single video with youtube-dl
+     * @param url
+     * @param outputFile
+     * @return Event
+     */
+    private downloadWithYoutubeDl;
+    /**
+     * Convert a outputFile in MP3
+     * @param inputFile
+     * @param outputFile
+     * @param bitrate string
+     * @return Event
+     */
+    private convertInMP3;
 }

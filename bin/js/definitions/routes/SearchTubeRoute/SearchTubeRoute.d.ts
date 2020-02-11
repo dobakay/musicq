@@ -27,7 +27,6 @@ export declare class SearchTubeRoute extends BaseRoute implements ISearchTubeRou
      * @param next {NextFunction} Execute the next method.
      */
     index(req: Request, res: Response, next: NextFunction): void;
-    private sleep;
     /**
      * Search a query on YouTube and return the detailed results
      * @param query string

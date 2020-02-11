@@ -7,23 +7,25 @@ import { YoutubeApiService } from '../youtube-api/api.service';
 export class MusicService {
 
   audio;
+  source;
 
   constructor(private apiService: YoutubeApiService) {
-    this.audio = new Audio();
-    this.audio.crossOrigin = 'anonymous';
   }
 
   get(url) {
     // return this.apiService.get(url);
   }
 
-  load(url) {
-    this.audio.src = url;
-    this.audio.load();
-  }
-
   play(url, options?) {
-    this.load(url);
+    if(!this.audio) {
+      this.audio = document.createElement('audio');
+      this.source = document.createElement('source');
+      this.audio.appendChild(this.source);
+      document.body.appendChild(this.audio);
+      this.source.src = url;
+      this.audio.setAttribute('autoplay', "");
+    }
+    
     let playPromise = this.audio.play();
     // In browsers that don’t yet support this functionality,
     // playPromise won’t be defined.

@@ -45,7 +45,6 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
     constructor(router) {
         super(router);
         this.all_videos = new Set();
-        this.sleep = (seconds) => new Promise(resolve => setTimeout(resolve, (seconds || 1) * 1000));
         this.path = "/search-youtube/";
         this.router.get(this.path, (req, res, next) => {
             this.index.call(this, req, res, next);
@@ -174,7 +173,7 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
                     json: true,
                 }).then((video) => {
                     video = video.items[0];
-                    console.log(video);
+                    // console.log(video);
                     let ratio = 1.0;
                     if (!video.statistics) {
                         return;

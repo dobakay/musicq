@@ -95,7 +95,11 @@ class Server {
         // 	}
         // ));
         // enable CORS
-        this.app.use(cors());
+        var corsOptions = {
+            origin: '*',
+            optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+        };
+        this.app.use(cors(corsOptions));
         //use json from parser middleware
         this.app.use(body_parser_1.default.json());
         //use query string parser middleware
