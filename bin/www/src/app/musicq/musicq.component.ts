@@ -26,7 +26,7 @@ export class MusicqComponent implements OnInit {
     this.youtube.init().then(() => {
       setTimeout(() => { // DIRTY HACK
         this.search({_query: 'backspin33rpm'});
-      })
+      }, 100);
       
     });
   }
@@ -34,10 +34,10 @@ export class MusicqComponent implements OnInit {
   search(e) {
     this.searchMatches = [];
     let match = from(this.youtube.searchHeadless(e._query))
-                // .subscribe((val) => {
-                //   console.log(val);
-                //   this.searchMatches.push(val);
-                // });
+                .subscribe((val) => {
+                  console.log(val);
+                  this.searchMatches = val;
+                });
   }
 
   playTestTrack() {

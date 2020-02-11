@@ -59,7 +59,7 @@ let StreamTubeRoute = class StreamTubeRoute extends BaseRoute_1.BaseRoute {
     }
     downloadAudioToRoot(req, res, next) {
         let videoURL = `https://www.youtube.com/watch?v=${req.params.videoID}`;
-        let tubeDl = child_process_1.spawn("./dist/youtube_dl/youtube-dl", ["--extract-audio", "--audio-format", "mp3", "--audio-quality", "9", videoURL]);
+        let tubeDl = child_process_1.spawn("./bin/youtube_dl/youtube-dl", ["--extract-audio", "--audio-format", "mp3", "--audio-quality", "9", videoURL]);
         let decoder = new string_decoder_1.StringDecoder("utf8");
         let dataStr;
         let fileName;

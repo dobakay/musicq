@@ -56,7 +56,7 @@ export class StreamTubeRoute extends BaseRoute implements IStreamTubeRoute {
 
         let videoURL = `https://www.youtube.com/watch?v=${ req.params.videoID}`;
 
-        let tubeDl = spawn("./dist/youtube_dl/youtube-dl", ["--extract-audio", "--audio-format", "mp3", "--audio-quality", "9", videoURL]);
+        let tubeDl = spawn("./bin/youtube_dl/youtube-dl", ["--extract-audio", "--audio-format", "mp3", "--audio-quality", "9", videoURL]);
 
         let decoder = new StringDecoder("utf8");
         let dataStr: string;

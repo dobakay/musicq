@@ -71,24 +71,28 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const page = yield this.browser.newPage();
-                let json;
                 page.on("error", (er) => {
                     console.log(er);
                 });
-                yield page.setExtraHTTPHeaders({ Referer: "https://youtube.com" });
+                // await page.setExtraHTTPHeaders({Referer: "https://youtube.com"}); 
                 yield page.goto("https://youtube.com");
                 yield page.waitForSelector('input[id="search"]', { timeout: 5000 });
                 const input = yield page.$('input[id="search"]');
                 // overwrites last text in input
                 yield input.click({ clickCount: 3 });
+                yield input.focus();
                 yield input.type(q);
                 yield input.focus();
                 yield page.keyboard.press("Enter");
                 yield page.waitForFunction(`document.title.indexOf('${q}') !== -1`, { timeout: 5000 });
                 yield page.waitForSelector('ytd-video-renderer,ytd-grid-video-renderer', { timeout: 5000 });
                 yield this.sleep(1);
-                json = yield page.content();
+                let json = yield page.content();
                 json = this.parse(json);
+                // if(json.results.length === 0)
+                // {
+                // 	this.search(q, response);
+                // }
                 response.json(json);
                 yield page.close;
             }
@@ -107,8 +111,10 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
             results.push({
                 link: $(link).find('#video-title').attr('href'),
                 title: $(link).find('#video-title').text(),
+                thumbnail: $(link).find('#thumbnail img').attr('src'),
                 snippet: $(link).find('#description-text').text(),
-                channel: $(link).find('#byline a').text(),
+                channel: $(link).find('#container.ytd-channel-name a').attr('href'),
+                ownerText: $(link).find('#container.ytd-channel-name a').text(),
                 channel_link: $(link).find('#byline a').attr('href'),
                 num_views: $(link).find('#metadata-line span:nth-child(1)').text(),
                 release_date: $(link).find('#metadata-line span:nth-child(2)').text(),
@@ -119,6 +125,7 @@ let SearchTubeRoute = class SearchTubeRoute extends BaseRoute_1.BaseRoute {
             let res = results[i];
             if (res.link && res.link.trim() && res.title && res.title.trim()) {
                 res.title = res.title.trim();
+                res.id = res.link.substr((`/watch?v=`).length);
                 res.snippet = res.snippet.trim();
                 res.rank = i + 1;
                 // check if this result has been used before

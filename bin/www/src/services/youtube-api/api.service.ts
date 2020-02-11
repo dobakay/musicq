@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { map, filter, catchError, mergeMap, flatMap } from 'rxjs/operators';
 import { ScriptsService } from '../external.scripts.service/external.scripts.service';
 import { ClientSecret } from './client.secret';
+import { pipe } from 'rxjs';
 const SCOPES = ['https://www.googleapis.com/auth/plus.me',
                 'https://www.googleapis.com/auth/youtube.readonly',
                 'https://www.googleapis.com/auth/youtube'
@@ -17,6 +18,7 @@ declare var gapi: any;
 export class YoutubeApiService {
   private GoogleAuth;
   private user;
+  private lastSearchTimeStamp;
   constructor(private http: HttpClient, private externalScripts: ScriptsService, private clientCredential: ClientSecret) {
   }
 
@@ -92,38 +94,12 @@ export class YoutubeApiService {
   searchHeadless(q?) {
     try {
       return this.http.get('http://localhost:8080/search-youtube/?q=' + q)
-        // .pipe(map(this.extractThumbnails),
-        //   flatMap((item) => item),
-        //   flatMap((item) => item),
-        //   filter((item) => {
-        //     return Object.keys(item).indexOf('videoRenderer') !== -1;
-        //   }),
-        //   map(o => o['videoRenderer']),
-        //   map((o) => {
-        //     return {
-        //       lengthText: o.lengthText,
-        //       title: o.title,
-        //       id: o.videoId,
-        //       thumbnail: o.thumbnail,
-        //       fullObject: o
-        //     };
-        //   })
-        // );
-        .subscribe((val) => {
-          console.log(val);
-          return new Observable();
-        });
+                .pipe(
+                  map((res) => res['results'])
+                );
     } catch (error) {
       console.log(error);
+      return new Observable();
     }
-        // map((o) => {
-        //   return {
-        //     lengthText: o.lengthText,
-        //     title: o.title,
-        //     id: o.videoId,
-        //     thumbnail: o.thumbnail,
-        //     fullObject: o
-        //   }
-        // }))
   }
 }

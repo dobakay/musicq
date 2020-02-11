@@ -57,16 +57,16 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
        public async search(q: string, response: Response) {
 		   try {
 				const page = await this.browser.newPage();
-				let json;
 				page.on("error", (er: Error) => {
 					console.log(er);
 				});
-				await page.setExtraHTTPHeaders({Referer: "https://youtube.com"}); 
+				// await page.setExtraHTTPHeaders({Referer: "https://youtube.com"}); 
 				await page.goto("https://youtube.com");
 				await page.waitForSelector('input[id="search"]', { timeout: 5000 });
 				const input = await page.$('input[id="search"]');
 				// overwrites last text in input
 				await input.click({ clickCount: 3 });
+				await input.focus();
 				await input.type(q);
 				await input.focus();
 				await page.keyboard.press("Enter");
@@ -74,8 +74,12 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
 				await page.waitForSelector('ytd-video-renderer,ytd-grid-video-renderer', { timeout: 5000 });
 				await this.sleep(1);
 				
-				json = await page.content();
+				let json = await page.content();
 				json = this.parse(json);
+				// if(json.results.length === 0)
+				// {
+				// 	this.search(q, response);
+				// }
 				response.json(json);
 
 				await page.close;
@@ -95,8 +99,10 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
 				results.push({
 					link: $(link).find('#video-title').attr('href'),
 					title: $(link).find('#video-title').text(),
+					thumbnail: $(link).find('#thumbnail img').attr('src'),
 					snippet: $(link).find('#description-text').text(),
-					channel: $(link).find('#byline a').text(),
+					channel: $(link).find('#container.ytd-channel-name a').attr('href'),
+					ownerText: $(link).find('#container.ytd-channel-name a').text(),
 					channel_link: $(link).find('#byline a').attr('href'),
 					num_views: $(link).find('#metadata-line span:nth-child(1)').text(),
 					release_date: $(link).find('#metadata-line span:nth-child(2)').text(),
@@ -108,6 +114,7 @@ export class SearchTubeRoute extends BaseRoute implements ISearchTubeRoute {
 				let res = results[i];
 				if (res.link && res.link.trim() && res.title && res.title.trim()) {
 					res.title = res.title.trim();
+					res.id = res.link.substr((`/watch?v=`).length);
 					res.snippet = res.snippet.trim();
 					res.rank = i+1;
 		
