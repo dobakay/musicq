@@ -46,12 +46,9 @@ How to start
 =============================================================
 
 Server:
-* `gulp build` to build scripts
-* `gulp serve` to start server on port 8080
-## Update
-Project now runs on WebPack because of TypeScript compilation options. 
-For full list of available commands checkout `package.json`. Also before running the 
-Webpack transpilation process run in the project console the contents of file `alloc_options.sh`.
+* `npm run watch-node` to start nodemon development server
+* `gulp watch` to build scripts on changed server files
+*NB!* Server runs on port 8080 by default.
 
 App:
 * In a different console navigate to the `rootDirectory/bin/www`
