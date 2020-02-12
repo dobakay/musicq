@@ -56,9 +56,7 @@ App:
 
 Progress and Knowhow
 =============================================================
-- Have a working `/youtube-download/ZTY8vlKO9hg` route that will download audio.
-- Added WebPack because of latest TypeScript compatibility transpilation opitons.
-- Added almost working DI on the server
+- Added working DI on the server
 - Learning how to debug with VSCode.
 - Trying to reshape the project like in source [here](https://github.com/microsoft/TypeScript-Node-Starter)
 

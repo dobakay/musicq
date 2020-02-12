@@ -72,9 +72,6 @@ export class StreamTubeRoute extends BaseRoute implements IStreamTubeRoute {
         
         //set stream for conversion
         var proc = new ffmpeg({source: stream});
-        proc.on('error', function (e:any) {
-            console.log(e);
-        });
         proc.on('end', function() {
             console.log('finished');
         });
@@ -86,6 +83,7 @@ export class StreamTubeRoute extends BaseRoute implements IStreamTubeRoute {
         });
         proc.setFfmpegPath(path.resolve(__dirname + '../../../../youtube_dl/ffmpeg.exe'))
             .toFormat('mp3')
+            .audioBitrate('320k')
             .output(response).run();
 
         request.connection.on('close',function(){    

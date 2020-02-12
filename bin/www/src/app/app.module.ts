@@ -21,6 +21,10 @@ import { AppComponent } from './app.component';
 import { MusicqComponent } from './musicq/musicq.component';
 import { CardComponent } from './card/card.component';
 import { SearchComponent } from './search/search.component';
+import { AppRoutingModule } from './app-routing.module';
+import { PlayerComponent } from './player/player.component';
+import { PlayerControlsComponent } from './player/player-controls/player-controls.component';
+import { PlayListComponent } from './player/play-list/play-list.component';
 
 
 @NgModule({
@@ -28,11 +32,15 @@ import { SearchComponent } from './search/search.component';
     AppComponent,
     MusicqComponent,
     CardComponent,
-    SearchComponent
+    SearchComponent,
+    PlayerComponent,
+    PlayerControlsComponent,
+    PlayListComponent,
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule
   ],
   providers: [
     LocalFileService,
