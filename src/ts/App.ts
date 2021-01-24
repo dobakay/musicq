@@ -1,23 +1,36 @@
-import * as bodyParser from "body-parser";
-import * as cookieParser from "cookie-parser";
-import * as express from "express";
-import * as logger from "morgan";
-import * as path from "path";
+//Server dependencies
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import express = require("express");
+import { Express } from "express-serve-static-core";
+import bunyan from "bunyan";
+import bunyanMiddleware from "bunyan-middleware";
+// import * as path from "path";
+import "reflect-metadata";
 var cors = require("cors");
 
-// import * as errorHandler from "errorHandler";
-var errorHandler = require("errorhandler");
-import * as methodOverride from "method-override";
+// import errorHandler from "errorHandler";
+import methodOverride from "method-override";
 // import methodOverride = require("method-override");
 
+// injector and references
+import "reflect-metadata";
+import { container } from "tsyringe";
+
+// services
+import { RootService } from "./services/RootService";
+
 // Routes
-import { IndexRoute } from "./routes/IndexRoute";
-import { StreamTubeRoute } from "./routes/StreamTubeRoute";
-import { SearchTubeRoute } from "./routes/SearchTubeRoute";
+import { BaseRoute } from "./routes/BaseRoute/BaseRoute";
+import { IndexRoute } from "./routes/IndexRoute/IndexRoute";
+import { StreamTubeRoute } from "./routes/StreamTubeRoute/StreamTubeRoute";
+import { SearchTubeRoute } from "./routes/SearchTubeRoute/SearchTubeRoute";
 
 export class Server {
 
-	public app: express.Application;
+	private servicesDepencyTree: any;
+	public app: Express;
+	private logger: any;
 
 	/**
 	 * Bootstrap the application.
@@ -25,7 +38,6 @@ export class Server {
 	 * @class Server
 	 * @method bootstrap
 	 * @static
-	 * @return {ng.auto.IInjectorService} Returns the newly created injector for this app.
 	 */
 	public static bootstrap(): Server {
 		return new Server();
@@ -52,6 +64,16 @@ export class Server {
 	}
 
 	/**
+	 * Resolve Service dependencies
+	 *
+	 * @class Server
+	 * @method resolveServiceDependencies
+	 */
+	resolveServiceDependencies() {
+		this.servicesDepencyTree = container.resolve(RootService);
+	}
+
+	/**
 	 * Create REST API routes
 	 *
 	 * @class Server
@@ -70,7 +92,8 @@ export class Server {
 	public config() {
 
 		// add static paths
-		this.app.use("/static", express.static(path.join(__dirname, "../www")));
+		// NOTE: Not Needed for now
+		// this.app.use("/static", express.static(path.join(__dirname, "../www")));
 
 		// NOTE: NOT NEEDED for now
 		// configure pug template engine
@@ -78,11 +101,27 @@ export class Server {
 		// this.app.set("view engine", "pug");
 
 		//use logger middleware
-		this.app.use(logger("dev"));
+		// this.logger = bunyan.createLogger({ name: 'MusicQServer' });
+		
+		// this.app.use(bunyanMiddleware(
+		// 	{ 
+		// 		headerName: 'X-Request-Id', 
+		// 		propertyName: 'reqId',
+		// 		logName: 'req_id',
+		// 		obscureHeaders: [],
+		// 		logger: this.logger,
+		// 		additionalRequestFinishData: function(req, res) {
+		// 			return { example: true }
+		// 	  	}
+		// 	}
+		// ));
 
 		// enable CORS
-		this.app.use(cors());
-
+		var corsOptions = {
+			origin: '*',
+			optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+		  }
+		this.app.use(cors(corsOptions));
 		//use json from parser middleware
 		this.app.use(bodyParser.json());
 
@@ -96,16 +135,15 @@ export class Server {
 		this.app.use(methodOverride());
 
 		//catch error 404 and forward to error errorhandler
-		this.app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-			// err.status = 404;
-			console.log(err);
-			res.status(500).send();
-			next(err);
-		});
+		// this.app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+		// 	// err.status = 404;
+		// 	console.log(err);
+		// 	res.status(500).send();
+		// 	next(err);
+		// });
 
-		//error handling
-		this.app.use(errorHandler());
-
+		// //error handling
+		// this.app.use(errorHandler());
 	}
 
 	/**
@@ -116,15 +154,21 @@ export class Server {
    * @return void
    */
 	public routes() {
-		let router: express.Router;
-		router = express.Router();
+		const router = express.Router();
+		let routes: BaseRoute[] = [];
 
 		// Routes init
-		IndexRoute.create(router); // /
-		StreamTubeRoute.create(router); // /youtube-download/:videoID
-		SearchTubeRoute.create(router);	// /search-youtube/?query
+		container.register("Router", {
+			useValue: router
+		});
+
+		// TODO: iterate over routes and inject services to Routes(Controllers)
+		routes.push(container.resolve(IndexRoute));
+		routes.push(container.resolve(StreamTubeRoute));
+		routes.push(container.resolve(SearchTubeRoute));
 
 		//use router middleware
+		// registering the routes in the Express app
 		this.app.use(router);
 	}
 }

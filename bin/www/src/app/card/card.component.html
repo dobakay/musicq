@@ -1,0 +1,18 @@
+<div
+  [id]="item.id"
+  class="thumb-container"
+  (click)="playSong(item)" 
+  (mouseover)="hoverCard()" (mouseout)="hoverCard()"
+  [ngClass]="this.hovered? 'hovered' : '' ">
+  <div class="thumb" [ngClass]="this.hovered? 'hovered' : '' ">
+    <img [src]="item.thumbnail.url" alt="">
+
+    <p class="length-background"></p>
+    <!-- <p class="length">{{item}}</p> -->
+    <div class="info-background"></div>
+    <div class="info">
+        <p class="title">{{item.title}}</p>
+        <!-- <p class="artist">{{item.ownerText}}</p> -->
+    </div>
+  </div>
+</div>

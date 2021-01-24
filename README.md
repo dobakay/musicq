@@ -36,25 +36,27 @@ NOTES
 
 Prerequisites
 =============================================================
-* Use atleast node v.6
+* Use at least node v.6
 * Run `npm install -g @angular/cli@latest` to install angular-cli globally
 
 * In project folder run `npm install` to add node modules
-* Navigate to `dist/www/` and run npm install again.
+* Navigate to `bin/www/` and run npm install again.
 
 How to start
 =============================================================
 
 Server:
-* `gulp build` to build scripts
-* `gulp serve` to start server on port 8080
+* `npm run watch-node` to start nodemon development server
+* `gulp watch` to build scripts on changed server files
+*NB!* Server runs on port 8080 by default.
 
 App:
-* In a different console navigate to the `rootDirectory/dist/www`
+* In a different console navigate to the `rootDirectory/bin/www`
 * Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 Progress and Knowhow
 =============================================================
-- Have a working `/youtube-download/ZTY8vlKO9hg` route that will download audio.
+- Added working DI on the server
 - Learning how to debug with VSCode.
+- Trying to reshape the project like in source [here](https://github.com/microsoft/TypeScript-Node-Starter)
 

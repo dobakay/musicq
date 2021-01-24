@@ -1,25 +1,26 @@
 
 {
-    "server_entry_point": "dist/js/index.js",
+    "server_entry_point": "bin/js/index.js",
     "input": "src",
-    "output": "dist/",
-    "clear": "dist/*",
+    "output": "bin/",
+    "clear": "bin/*",
     "html": {
         "input": [
             "src/front-end/**/*"
         ],
-        "clear": "dist/www/*",
-        "output": "dist/www/"
+        "clear": "bin/www/*",
+        "output": "bin/www/"
     },
     "youtube_dl": {
         "input": "src/youtube_dl/*",
-        "output": "dist/youtube_dl/"
+        "output": "bin/youtube_dl/"
     },
     "scripts": {
-        "input": "src/ts/*",
-        "output_definitions": "dist/js/definitions/",
-        "clear": "dist/js/*",
-        "output": "dist/js/"
+        "input": "./src/ts/**/*.ts",
+        "output_definitions": "bin/js/definitions/",
+        "source_maps": "./source_maps/",
+        "clear": "bin/js/*",
+        "output": "bin/js/"
     },
     "docs": {
         "input": "src/docs/*.{html,md,markdown}",
