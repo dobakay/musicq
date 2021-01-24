@@ -57,5 +57,4 @@ Progress and Knowhow
 =============================================================
 - Have a working `/youtube-download/ZTY8vlKO9hg` route that will download audio.
 - Learning how to debug with VSCode.
-- Learning Angular 4
 

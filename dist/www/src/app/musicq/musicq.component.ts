@@ -22,30 +22,20 @@ export class MusicqComponent implements OnInit {
   constructor(private musicService: MusicService, private youtube: YoutubeApiService) {}
 
   ngOnInit() {
-    // this.musicService.getPlaylistTracks().subscribe(tracks => {
-    //   this.tracks = tracks;
-    //   this.handleRandom();
-    // });
-    // this.playTestTrack();
-    // this.musicService.audio.onend = this.handleEnded.bind(this);
-
-    // this.musicService.audio.ontimeupdate = this.handleTimeUpdate.bind(this);
     this.youtube.init().then(() => {
-      this.search({_query: 'backspin33rpm'});
+      setTimeout(() => { // DIRTY HACK
+        this.search({_query: 'backspin33rpm'});
+      })
+      
     });
   }
 
   search(e) {
     this.searchMatches = [];
-    let match = from (this.youtube.search(e._query));
+    let match = from (this.youtube.searchHeadless(e._query));
     match
-      .pipe(
-        flatMap((data) => data['items']),
-        filter((item) => item['id'].kind === "youtube#video")
-      )
       .subscribe((res) => {
-        console.log(res);
-        this.searchMatches.push(res);
+        this.searchMatches = res;
       });
   }
 

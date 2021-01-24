@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/internal/Observable';
+import { map, filter, catchError, mergeMap, flatMap } from 'rxjs/operators';
 import { ScriptsService } from '../external.scripts.service/external.scripts.service';
 import { ClientSecret } from './client.secret';
-import { resolve } from 'url';
-// const OAuth2 = google.auth.OAuth2;
-const SCOPE = 'https://www.googleapis.com/auth/youtube.readonly';
+const SCOPES = ['https://www.googleapis.com/auth/plus.me',
+                'https://www.googleapis.com/auth/youtube.readonly',
+                'https://www.googleapis.com/auth/youtube'
+              ];
 
 declare var gapi: any;
 
@@ -13,29 +15,22 @@ declare var gapi: any;
   providedIn: 'root'
 })
 export class YoutubeApiService {
-
+  private GoogleAuth;
+  private user;
   constructor(private http: Http, private externalScripts: ScriptsService, private clientCredential: ClientSecret) {
   }
 
-  init():Promise<any> {
-    return this.externalScripts.loadScript('GAPI')
-                .then((data) => {
-                  return this.getGapis();
-                })
-                .then(() => {
-                  return this.authorization();
-                })
-                .then(() => {
-                  return this.setClient();
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
+  async init():Promise<any> {
+    // await this.externalScripts.loadScript('GAPI');
+    // await this.getGapis();
+    // await this.authorization();
+    // await this.setClient();
+    return Promise.resolve();
   }
 
   getGapis() {
     return new Promise((resolve, reject) => {
-      gapi.load('auth:client', () => {
+      gapi.load('auth2:client', () => {
         resolve();
       });
     });
@@ -45,20 +40,19 @@ export class YoutubeApiService {
   * Authorize Google Compute Engine API.
   */
   authorization() {
-      return gapi.auth.authorize({
-        client_id: this.clientCredential.clientId,
-        scope: SCOPE,
-        immediate: false
-      }, (authResult) => {
-            if (authResult && !authResult.error) {
-              // window.alert('Auth was successful!');
-              return Promise.resolve();
-            } else {
-              // window.alert('Auth was not successful');
-              console.log(authResult.error);
-              return Promise.reject(authResult.error);
-            }
+    return new Promise((resolve, reject) => {
+      gapi.client.init({
+        apiKey: this.clientCredential.apiToken,
+        clientId: this.clientCredential.clientId,
+        scope: SCOPES.join(' '),
+      }).then(()=> {
+        this.GoogleAuth = gapi.auth2.getAuthInstance();
+        this.GoogleAuth.signIn();
+        this.user = this.GoogleAuth.currentUser.get();
+        this.user.grant({scope: SCOPES.join(' ')});
+        return resolve();
       });
+    });
   }
 
   setClient() {
@@ -70,10 +64,12 @@ export class YoutubeApiService {
   }
 
   search(q?) {
-    if(gapi.client) {
+    if(!!gapi.client && !!gapi.client.youtube) {
       let request = gapi.client.youtube.search.list({
         q: q || 'tha trickaz',
         part: 'snippet',
+        type:'video',
+        forDevelopers: true,
         maxResults: 50
       });
     
@@ -83,27 +79,28 @@ export class YoutubeApiService {
         });
       });
     }
+    console.log(gapi.client);
+    return Promise.reject(new Error('no youtube client'));
   }
 
-  prepareUrl(url) {
-    return `${url}`;
+  async searchHeadless(q?) {
+    this.http.get('http://localhost:8080/search-youtube/?q=' + q)
+    .pipe(map(res => res.json()[1].response.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents),
+          flatMap((item) => item),
+        filter((item) => item.videoRenderer),
+        map(o => o.videoRenderer),
+        map((o) => {
+          return {
+            lengthText: o.lengthText,
+            title: o.title,
+            id: o.videoId,
+            thumbnail: o.thumbnail,
+            fullObject: o
+          }
+        }))
+    .subscribe((val) => {
+      console.log(val);
+      return new Observable();
+    })
   }
-
-  get(url) {
-    // Returns an obsrevable
-    // for the HTTP get request
-    return this.http.get(url);
-  }
-
-  authorize(credentials, callback) {
-    const clientSecret = credentials.installed.client_secret;
-    const clientId = credentials.installed.client_id;
-    const redirectUrl = credentials.installed.redirect_uris[0];
-    // const oauth2Client = new OAuth2(clientId, clientSecret, redirectUrl);
-  }
-
-  // public getJSON(): Observable<any> {
-  //   return this.http.get('../assets/client_secret_json.json')
-  //     .map((res: any) => res.json());
-  // }
 }

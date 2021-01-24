@@ -82,34 +82,21 @@ gulp.task('youtube_dl-copy', () => {
 // NOTE: order is essential
 gulp.task('build', ['clean:scripts', 'scripts']);
 
-// SERVER start function
-// const spawn = require('child_process').spawn;
-// let node;
-
-// gulp.task('server:stop', () => {
-//     if (node) {
-//         node.kill(node.pid, 'SIGKILL');
-//     }
-// });
-
 gulp.task('server', () => {
     nodemon({
         'script': paths.server_entry_point,
-        // 'ignore': './dist/www/*.js'
     });
 });
 
+let serverStarted = false;
 gulp.task('watch', () => {
-    watch(paths.scripts.input, ['clean:scripts', 'scripts']);
-    // watch(paths.html.input, ['clean:html', 'html']);
+    gulp.emit('startServer');
+    return watch(paths.input,() => gulp.start('build'));
+});
+
+gulp.once('startServer', () => {
+    gulp.start('serve');
 });
 
 gulp.task('serve', ['server']);
 gulp.task('default', ['server']);
-
-// clean up if an error goes unhandled.
-// process.on('exit', function () {
-//     if (node) {
-//         node.kill('SIGKILL');
-//     }
-// });
