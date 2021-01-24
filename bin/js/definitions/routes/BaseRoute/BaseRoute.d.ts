@@ -1,5 +1,7 @@
 import { Request, Response, Router } from "express";
 import { IBaseRoute } from "./IBaseRoute";
+import { Request, Response } from "express";
+
 /**
  * Constructor
  * @class BaseRoute

@@ -5,6 +5,22 @@ Create a mediocre client/server system for home usage,
 using the wi-fi so that the guests of the host can choose
 (curriate) the music and set the party mood.
 
+## Architecture
+For the purposes of a prototype
+
+# Backend
+* Music service(Popular streaming services providers, and catalogs) aggregator core.
+* Duplex streaming of data to and from mobile clients, depending on the information - different API designs for different purposes.
+* NodeJS + TS (coding styles heavily influenced by verbose staticly typed languages - JAVA and C# )
+
+# FRONTEND
+* SPA Angular client
+* Mobile friendly - Ionic or some other "Native" substitution for the time being
+* Desktop app - Electron
+* Browser enabled option
+* Gamification
+
+
 NOTES
 ===========================================================
 * Using tutorial from [here](http://mherman.org/blog/2016/11/05/developing-a-restful-api-with-node-and-typescript/#.WTa8GGiGNhE)

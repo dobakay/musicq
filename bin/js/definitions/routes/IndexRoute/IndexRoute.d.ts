@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response, Router } from "express-serve-static-core";
 import { BaseRoute } from "../BaseRoute/BaseRoute";
 import { IIndexRoute } from "./IIndexRoute";
+import { NextFunction, Request, Response, Router } from "express";
+import { BaseRoute } from "./BaseRoute";
 /**
  * "/" route
  *

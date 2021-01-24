@@ -1,6 +1,4 @@
-import { Express } from "express-serve-static-core";
-import "reflect-metadata";
-import "reflect-metadata";
+import * as express from "express";
 export declare class Server {
     private servicesDepencyTree;
     app: Express;
