@@ -88,7 +88,7 @@
     "webpack-dev-server": "^3.10.1",
     "webpack-hot-client": "^4.1.2",
     "webpack-hot-middleware": "^2.25.0",
-    "ws": "^7.2.1"
+    "ws": "^7.4.5"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
